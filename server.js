@@ -56,7 +56,7 @@ const server = http.createServer((req, res) => {
 server.listen(PORT, () => {
   const url = `http://localhost:${PORT}`;
   console.log('\n==================================================');
-  console.log(`  🚀 MedCheck TH Dev Server พร้อมทำงานแล้ว!`);
+  console.log(`  🚀 Dose match Dev Server พร้อมทำงานแล้ว!`);
   console.log(`  🔗 Local:   ${url}`);
   console.log('==================================================\n');
 

@@ -8,7 +8,7 @@ $listener.Prefixes.Add($url)
 try {
     $listener.Start()
     Write-Host "======================================================" -ForegroundColor Cyan
-    Write-Host "  MedCheck TH Dev Server กำลังทำงานที่: $url" -ForegroundColor Green
+    Write-Host "  Dose match Dev Server กำลังทำงานที่: $url" -ForegroundColor Green
     Write-Host "  กด Ctrl + C เพื่อหยุดเซิร์ฟเวอร์" -ForegroundColor Yellow
     Write-Host "======================================================" -ForegroundColor Cyan
     Start-Process $url

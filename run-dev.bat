@@ -1,5 +1,5 @@
 @echo off
 set "PATH=C:\Program Files\nodejs;%PATH%"
-echo Starting MedCheck TH Dev Server...
+echo Starting Dose match Dev Server...
 call npm.cmd run dev
 pause

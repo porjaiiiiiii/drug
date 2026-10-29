@@ -1,7 +1,7 @@
 {
-  "name": "medcheck-th",
-  "version": "2.5.0",
-  "description": "ระบบตรวจสอบปฏิสัมพันธ์ยา (Clinical Drug Interaction Checker)",
+  "name": "dose-match",
+  "version": "3.0.0",
+  "description": "Dose match - ระบบตรวจสอบและจับคู่วิเคราะห์ปฏิสัมพันธ์ยาอัจฉริยะ (Clinical Drug Interaction Checker)",
   "main": "server.js",
   "scripts": {
     "dev": "node server.js",
