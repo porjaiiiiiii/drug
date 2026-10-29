@@ -1,0 +1,10 @@
+{
+  "name": "medcheck-th",
+  "version": "2.5.0",
+  "description": "ระบบตรวจสอบปฏิสัมพันธ์ยา (Clinical Drug Interaction Checker)",
+  "main": "server.js",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js"
+  }
+}
