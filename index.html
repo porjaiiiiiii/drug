@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dosematch - ระบบตรวจสอบและประเมินปฏิสัมพันธ์คู่ยา</title>
-    <meta name="description" content="Dosematch ระบบตรวจสอบปฏิสัมพันธ์คู่ยา (Clinical Drug Interaction Checker) วิเคราะห์ความปลอดภัย กลไกการตีกันของยา การจัดเวลาทานยา และข้อควรระวังเรื่องอาหาร">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230d9488' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z'/><path d='m8.5 8.5 7 7'/></svg>">
+    <title>Dosematch — ระบบวิเคราะห์และตรวจสอบปฏิสัมพันธ์คู่ยาทางคลินิก</title>
+    <meta name="description" content="Dosematch แพลตฟอร์มตรวจสอบปฏิสัมพันธ์คู่ยาและประเมินความปลอดภัยทางเภสัชกรรม ค้นหาคู่ยาตีกัน แนะนำการจัดเวลา และข้อควรระวังเรื่องอาหาร">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230d9488' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'><rect width='8' height='16' x='8' y='4' rx='4'/><path d='M8 10h8'/><path d='m4.5 12.5 3-3'/><path d='m19.5 11.5-3 3'/></svg>">
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Google Fonts: Prompt & Sarabun (Thai) + Plus Jakarta Sans (English/Numbers) -->
+    <!-- Google Fonts: Prompt & Sarabun & Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Prompt:wght@400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Prompt:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Sarabun:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
     
-    <!-- FontAwesome 6 Icons -->
+    <!-- FontAwesome 6 Pro-style CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <script>
@@ -31,12 +31,22 @@
                         brand: {
                             50: '#f0fdfa',
                             100: '#ccfbf1',
+                            200: '#99f6e4',
+                            300: '#5eead4',
+                            400: '#2dd4bf',
                             500: '#14b8a6',
                             600: '#0d9488',
                             700: '#0f766e',
                             800: '#115e59',
-                            900: '#134e4a'
+                            900: '#134e4a',
+                            950: '#042f2e'
                         }
+                    },
+                    boxShadow: {
+                        'soft': '0 2px 15px -3px rgba(0, 0, 0, 0.04), 0 4px 6px -4px rgba(0, 0, 0, 0.02)',
+                        'card': '0 10px 30px -5px rgba(15, 23, 42, 0.05), 0 4px 6px -2px rgba(15, 23, 42, 0.02)',
+                        'floating': '0 20px 40px -10px rgba(13, 148, 136, 0.15)',
+                        'glow': '0 0 25px rgba(13, 148, 136, 0.25)'
                     }
                 }
             }
@@ -44,13 +54,23 @@
     </script>
 
     <style>
-        body {
-            font-family: 'Sarabun', sans-serif;
-            background-color: #f8fafc;
-            color: #0f172a;
+        :root {
+            --app-bg: #f8fafc;
         }
         
-        h1, h2, h3, h4, h5, h6, .font-heading {
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background-color: var(--app-bg);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(20, 184, 166, 0.06) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(56, 189, 248, 0.05) 0px, transparent 50%),
+                radial-gradient(#cbd5e1 0.75px, transparent 0.75px);
+            background-size: 100% 100%, 100% 100%, 24px 24px;
+            color: #0f172a;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .font-heading {
             font-family: 'Prompt', sans-serif;
         }
 
@@ -58,561 +78,570 @@
             font-family: 'Plus Jakarta Sans', 'Prompt', sans-serif;
         }
 
-        /* Clean clinical cards */
-        .clinical-card {
-            background-color: #ffffff;
-            border: 1px solid #e2e8f0;
-            border-radius: 1rem;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.03);
+        /* Glass Surface Effects */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(226, 232, 240, 0.85);
         }
 
-        /* Custom scrollbar */
+        .glass-header {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        /* Custom Scrollbar */
         ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
+            width: 5px;
+            height: 5px;
         }
         ::-webkit-scrollbar-track {
-            background: #f1f5f9;
+            background: transparent;
         }
         ::-webkit-scrollbar-thumb {
             background: #cbd5e1;
-            border-radius: 9999px;
+            border-radius: 10px;
         }
         ::-webkit-scrollbar-thumb:hover {
             background: #94a3b8;
         }
 
-        /* Print styles */
-        @media print {
-            .no-print { display: none !important; }
-            .print-only { display: block !important; }
-            body { background: white !important; font-size: 11pt; color: #000 !important; }
-            .print-card { box-shadow: none !important; border: 1px solid #cbd5e1 !important; break-inside: avoid; }
+        /* Toggle switch */
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #0d9488;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #0d9488;
         }
 
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
+        /* Custom Card Hover */
+        .interactive-card {
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
+        .interactive-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px -6px rgba(15, 23, 42, 0.08);
+        }
+
+        /* Gauge animation */
+        .gauge-circle {
+            transition: stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes pulse-subtle {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.85; transform: scale(1.02); }
+        }
+
+        /* Print formatting */
+        @media print {
+            .no-print { display: none !important; }
+            body { background: white !important; color: black !important; font-size: 11pt; }
+            .glass-panel { backdrop-filter: none !important; border: 1px solid #ccc !important; box-shadow: none !important; }
+            .print-break { break-inside: avoid; }
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col bg-slate-50 selection:bg-teal-600 selection:text-white">
+<body class="min-h-screen flex flex-col selection:bg-teal-500 selection:text-white">
 
-    <!-- Clinical Navbar -->
-    <header class="sticky top-0 z-40 bg-white border-b border-slate-200/90 shadow-xs no-print">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
-            
+    <!-- Top Navigation Bar -->
+    <header class="sticky top-0 z-40 glass-header transition-all">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
             <!-- Brand Logo -->
-            <div class="flex items-center gap-3 cursor-pointer select-none" onclick="location.reload()">
-                <div class="w-10 h-10 rounded-xl bg-teal-600 flex items-center justify-center text-white shadow-sm flex-shrink-0">
-                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/>
-                        <path d="m8.5 8.5 7 7"/>
-                    </svg>
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-700 via-brand-600 to-teal-400 flex items-center justify-center text-white shadow-md shadow-brand-500/20 ring-2 ring-white">
+                    <i class="fa-solid fa-capsules text-lg"></i>
                 </div>
                 <div>
-                    <div class="flex items-center gap-1.5">
-                        <span class="font-display text-xl font-bold tracking-tight text-slate-900 leading-none">
-                            Dose<span class="text-teal-600">match</span>
+                    <div class="flex items-center gap-2">
+                        <span class="text-xl font-extrabold tracking-tight font-display text-slate-900">
+                            Dose<span class="text-transparent bg-clip-text bg-gradient-to-r from-teal-600 to-emerald-500">match</span>
+                        </span>
+                        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-brand-50 text-brand-700 border border-brand-200">
+                            <span class="w-1.5 h-1.5 rounded-full bg-teal-500 animate-pulse"></span>
+                            Clinical v2
                         </span>
                     </div>
-                    <p class="text-[11px] text-slate-500 font-normal mt-0.5">ระบบตรวจสอบและวิเคราะห์ปฏิสัมพันธ์คู่ยา (Clinical Drug Interaction Checker)</p>
+                    <p class="text-[11px] text-slate-500 hidden sm:block">ระบบตรวจสอบความปลอดภัยและวิเคราะห์ปฏิสัมพันธ์คู่ยา</p>
                 </div>
             </div>
 
-            <!-- Navbar Actions -->
-            <div class="flex items-center gap-2">
-                <button onclick="loadRandomPreset()" class="text-xs font-medium text-teal-700 bg-teal-50 hover:bg-teal-100 px-3 py-2 rounded-xl transition-colors border border-teal-200/70 flex items-center gap-1.5">
-                    <i class="fa-solid fa-wand-magic-sparkles text-teal-600"></i>
-                    <span class="hidden md:inline">สุ่มตัวอย่างทดสอบ</span>
+            <!-- Header Quick Actions -->
+            <div class="flex items-center gap-2 sm:gap-3">
+                <!-- Drug Catalog Trigger -->
+                <button onclick="openModal('modal-catalog')" class="inline-flex items-center gap-2 px-3 sm:px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-700 hover:text-brand-700 bg-slate-100 hover:bg-brand-50 border border-slate-200/80 transition-all font-heading">
+                    <i class="fa-solid fa-tablets text-brand-600"></i>
+                    <span>คลังยา <span class="hidden sm:inline">(43 รายการ)</span></span>
                 </button>
-                <button onclick="openModal('drug-catalog-modal')" class="text-xs font-medium text-slate-700 bg-slate-100 hover:bg-slate-200/80 px-3 py-2 rounded-xl transition-colors border border-slate-200 flex items-center gap-1.5">
-                    <i class="fa-solid fa-book-medical text-teal-600"></i>
-                    <span>สมุดรายชื่อยา (<span id="nav-drug-count">43</span>)</span>
-                </button>
-                <button onclick="openModal('food-modal')" class="text-xs font-medium text-slate-700 bg-slate-100 hover:bg-slate-200/80 px-3 py-2 rounded-xl transition-colors border border-slate-200 flex items-center gap-1.5">
+
+                <!-- Food Guidelines Trigger -->
+                <button onclick="openModal('modal-food-guide')" class="inline-flex items-center gap-2 px-3 sm:px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-700 hover:text-amber-700 bg-slate-100 hover:bg-amber-50 border border-slate-200/80 transition-all font-heading">
                     <i class="fa-solid fa-utensils text-amber-600"></i>
-                    <span class="hidden sm:inline">ยา & อาหาร</span>
+                    <span class="hidden sm:inline">ข้อควรระวัง</span>อาหาร
                 </button>
-                <button onclick="openModal('disclaimer-modal')" class="text-xs font-medium text-slate-600 hover:text-slate-800 bg-slate-100 hover:bg-slate-200/80 px-3 py-2 rounded-xl transition-colors border border-slate-200 flex items-center gap-1.5">
-                    <i class="fa-solid fa-shield-heart text-slate-400"></i>
-                    <span class="hidden lg:inline">ข้อตกลงการใช้งาน</span>
+
+                <!-- Disclaimer info button -->
+                <button onclick="openModal('modal-disclaimer')" class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-all" title="ข้อจำกัดความรับผิดชอบ">
+                    <i class="fa-regular fa-circle-question text-sm"></i>
                 </button>
             </div>
         </div>
     </header>
 
-    <!-- Main Content Workspace -->
-    <main class="flex-grow max-w-7xl w-full mx-auto px-4 py-6 sm:px-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+    <!-- Main Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+        
+        <!-- Quick Starter Presets Bar (1-Click Test) -->
+        <div class="mb-6 p-3 sm:p-4 rounded-2xl glass-panel shadow-soft border border-slate-200/80 flex flex-col md:flex-row md:items-center justify-between gap-3">
+            <div class="flex items-center gap-2.5 text-xs text-slate-600 font-medium">
+                <span class="w-6 h-6 rounded-lg bg-teal-50 text-teal-700 flex items-center justify-center text-xs flex-shrink-0">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                </span>
+                <span class="font-heading font-semibold text-slate-800">ทดสอบสูตรยาทันที (Quick Presets):</span>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+                <button onclick="loadPreset('major')" class="px-2.5 py-1 rounded-lg text-xs font-medium bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200 transition-colors flex items-center gap-1.5">
+                    <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+                    Warfarin + Aspirin (เสี่ยงเลือดออก)
+                </button>
+                <button onclick="loadPreset('moderate')" class="px-2.5 py-1 rounded-lg text-xs font-medium bg-amber-50 text-amber-800 hover:bg-amber-100 border border-amber-200 transition-colors flex items-center gap-1.5">
+                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                    Ciprofloxacin + ยาลดกรด (ลดดูดซึม)
+                </button>
+                <button onclick="loadPreset('safe')" class="px-2.5 py-1 rounded-lg text-xs font-medium bg-emerald-50 text-emerald-800 hover:bg-emerald-100 border border-emerald-200 transition-colors flex items-center gap-1.5">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                    ชุดโรคเรื้อรัง (Metformin + Statin)
+                </button>
+                <button onclick="clearSelectedDrugs()" class="px-2 py-1 rounded-lg text-xs text-slate-400 hover:text-rose-600 hover:bg-slate-100 transition-colors" title="ล้างรายการทั้งหมด">
+                    <i class="fa-solid fa-arrow-rotate-left mr-1"></i>รีเซ็ต
+                </button>
+            </div>
+        </div>
 
-        <!-- ============================================== -->
-        <!-- LEFT COLUMN: Medication Manager (5 Cols)       -->
-        <!-- ============================================== -->
-        <section class="lg:col-span-5 flex flex-col gap-4 no-print">
+        <!-- 12-Column Responsive Workspace -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
             
-            <div class="clinical-card p-5">
-                <!-- Header -->
-                <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-                    <div>
-                        <h2 class="text-sm font-bold text-slate-900 flex items-center gap-2 font-heading">
-                            <i class="fa-solid fa-pills text-teal-600"></i>
-                            ค้นหาและจัดชุดยาที่รับประทาน
-                        </h2>
-                        <p class="text-xs text-slate-500 mt-0.5">พิมพ์ชื่อยาภาษาไทย, ภาษาอังกฤษ หรือชื่อทางการค้า</p>
-                    </div>
-                    <span id="db-count-badge" class="text-[11px] font-medium bg-slate-100 text-slate-600 px-2.5 py-1 rounded-lg border border-slate-200">
-                        ฐานข้อมูล 43 ชนิด
-                    </span>
-                </div>
-
-                <!-- Search Input -->
-                <div class="relative mt-3.5">
-                    <div class="relative flex items-center">
-                        <div class="absolute left-3.5 text-slate-400 pointer-events-none text-sm">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                        </div>
-                        <input type="text" id="drug-search-input" autocomplete="off" 
-                            placeholder="พิมพ์ชื่อยา เช่น Paracetamol, Warfarin, โกเฟน, ยาลดกรด..." 
-                            class="w-full pl-10 pr-20 py-2.5 bg-slate-50 hover:bg-white focus:bg-white border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 text-xs sm:text-sm font-medium transition-all placeholder:text-slate-400"
-                            oninput="handleSearchInput(this.value)"
-                            onfocus="handleSearchFocus()"
-                            onkeydown="handleSearchKeydown(event)"
-                        />
-                        <div class="absolute right-2.5 flex items-center gap-1">
-                            <button id="clear-search-btn" onclick="clearSearchInput()" class="hidden text-slate-400 hover:text-slate-600 p-1 rounded-md hover:bg-slate-100 transition-colors" title="ล้างคำค้นหา">
-                                <i class="fa-solid fa-xmark text-sm"></i>
-                            </button>
-                            <span class="text-[10px] font-mono font-medium bg-slate-100 text-slate-400 px-1.5 py-0.5 rounded border border-slate-200 hidden sm:inline">
-                                Ctrl+K
-                            </span>
-                        </div>
-                    </div>
-
-                    <!-- Autocomplete Dropdown List -->
-                    <div id="autocomplete-dropdown" class="hidden absolute left-0 right-0 top-full mt-1.5 bg-white border border-slate-200 rounded-xl shadow-lg z-30 max-h-80 overflow-y-auto divide-y divide-slate-100">
-                        <!-- Items injected dynamically -->
-                    </div>
-                </div>
-
-                <!-- Category Filters -->
-                <div class="mt-3 flex items-center gap-1.5 overflow-x-auto pb-1 text-xs no-scrollbar">
-                    <button onclick="filterSearchByCategory('all', event)" class="cat-pill active px-3 py-1.5 rounded-lg bg-slate-800 text-white font-medium whitespace-nowrap transition-colors">ทั้งหมด</button>
-                    <button onclick="filterSearchByCategory('pain', event)" class="cat-pill px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium whitespace-nowrap transition-colors">แก้ปวด/อักเสบ</button>
-                    <button onclick="filterSearchByCategory('cardio', event)" class="cat-pill px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium whitespace-nowrap transition-colors">หัวใจ/ความดัน</button>
-                    <button onclick="filterSearchByCategory('endocrine', event)" class="cat-pill px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium whitespace-nowrap transition-colors">เบาหวาน/ฮอร์โมน</button>
-                    <button onclick="filterSearchByCategory('gi', event)" class="cat-pill px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium whitespace-nowrap transition-colors">ทางเดินอาหาร</button>
-                    <button onclick="filterSearchByCategory('antibiotic', event)" class="cat-pill px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium whitespace-nowrap transition-colors">ยาฆ่าเชื้อ</button>
-                    <button onclick="filterSearchByCategory('cns', event)" class="cat-pill px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium whitespace-nowrap transition-colors">ระบบประสาท</button>
-                    <button onclick="filterSearchByCategory('supplement', event)" class="cat-pill px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium whitespace-nowrap transition-colors">สมุนไพร/วิตามิน</button>
-                </div>
-
-                <!-- Selected Medications Section (Directly under search) -->
-                <div class="mt-4 pt-3.5 border-t border-slate-100">
-                    <div class="flex items-center justify-between mb-2.5">
-                        <div class="flex items-center gap-2">
-                            <span class="text-xs font-bold text-slate-800 font-heading">รายการยาที่เลือกตรวจ:</span>
-                            <span class="text-[11px] font-bold text-teal-700 bg-teal-50 px-2 py-0.5 rounded-md border border-teal-200">
-                                <span id="selected-count">0</span> ชนิด
-                            </span>
-                        </div>
-                        <button id="clear-all-btn" onclick="clearSelectedDrugs()" class="hidden text-xs text-rose-600 hover:text-rose-700 font-medium hover:underline">
-                            ล้างทั้งหมด
-                        </button>
-                    </div>
-
-                    <!-- Selected drugs container -->
-                    <div id="selected-drugs-list" class="flex flex-col gap-2 max-h-60 overflow-y-auto pr-1">
-                        <div id="empty-selected-state" class="py-6 text-center text-slate-400 bg-slate-50/70 rounded-xl border border-dashed border-slate-200">
-                            <i class="fa-solid fa-capsules text-2xl text-slate-300 mb-1.5"></i>
-                            <p class="text-xs font-medium text-slate-600">ยังไม่มีรายการยาในชุดตรวจ</p>
-                            <p class="text-[11px] text-slate-400 mt-0.5">ค้นหาและกดเลือกยาเพื่อเริ่มตรวจสอบ (อย่างน้อย 2 ชนิด)</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Patient Profile Vulnerability -->
-                <div class="mt-4 pt-3.5 border-t border-slate-100">
-                    <p class="text-xs font-bold text-slate-700 mb-2 flex items-center gap-1.5 font-heading">
-                        <i class="fa-solid fa-user-shield text-teal-600"></i> ปัจจัยเสี่ยงเฉพาะบุคคล:
-                    </p>
-                    <div class="grid grid-cols-2 gap-2 text-xs">
-                        <label class="flex items-center gap-2 p-2 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer hover:bg-slate-100 transition-colors select-none">
-                            <input type="checkbox" id="profile-elderly" class="rounded text-teal-600 focus:ring-teal-500 w-4 h-4" onchange="runInteractionCheckIfReady()">
-                            <span class="font-medium text-slate-700">ผู้สูงอายุ (&gt;65 ปี)</span>
-                        </label>
-                        <label class="flex items-center gap-2 p-2 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer hover:bg-slate-100 transition-colors select-none">
-                            <input type="checkbox" id="profile-kidney" class="rounded text-teal-600 focus:ring-teal-500 w-4 h-4" onchange="runInteractionCheckIfReady()">
-                            <span class="font-medium text-slate-700">โรคไต / ไตเสื่อม</span>
-                        </label>
-                    </div>
-                </div>
-
-                <!-- Primary CTA Action Button -->
-                <div class="mt-4">
-                    <button id="analyze-btn" onclick="analyzeInteractions()" disabled 
-                        class="w-full py-3 px-4 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all bg-slate-200 text-slate-400 cursor-not-allowed font-heading">
-                        <i class="fa-solid fa-shield-virus text-base"></i>
-                        <span>ตรวจสอบความปลอดภัย (<span id="btn-count">0</span> ชนิด)</span>
-                    </button>
-                </div>
-
-                <!-- Quick Presets -->
-                <div class="mt-4 pt-3.5 border-t border-slate-100">
-                    <p class="text-xs font-medium text-slate-500 mb-2">
-                        หรือทดสอบด้วยชุดยาตัวอย่างที่พบบ่อย:
-                    </p>
-                    <div class="grid grid-cols-2 gap-1.5 text-xs">
-                        <button onclick="loadPreset(['ibuprofen', 'warfarin'])" class="p-2 text-left rounded-lg bg-rose-50/70 hover:bg-rose-100/90 border border-rose-200/80 transition-colors">
-                            <span class="font-bold text-rose-900 block truncate">Ibuprofen + Warfarin</span>
-                            <span class="text-[10px] text-rose-700">เสี่ยงเลือดออกรุนแรง</span>
-                        </button>
-                        <button onclick="loadPreset(['ciprofloxacin', 'antacids'])" class="p-2 text-left rounded-lg bg-amber-50/70 hover:bg-amber-100/90 border border-amber-200/80 transition-colors">
-                            <span class="font-bold text-amber-900 block truncate">Ciprofloxacin + ยาลดกรด</span>
-                            <span class="text-[10px] text-amber-700">ลดการดูดซึมยาฆ่าเชื้อ</span>
-                        </button>
-                        <button onclick="loadPreset(['omeprazole', 'clopidogrel'])" class="p-2 text-left rounded-lg bg-amber-50/70 hover:bg-amber-100/90 border border-amber-200/80 transition-colors">
-                            <span class="font-bold text-amber-900 block truncate">Omeprazole + Clopidogrel</span>
-                            <span class="text-[10px] text-amber-700">ลดฤทธิ์ต้านลิ่มเลือด</span>
-                        </button>
-                        <button onclick="loadPreset(['paracetamol', 'amoxicillin'])" class="p-2 text-left rounded-lg bg-emerald-50/70 hover:bg-emerald-100/90 border border-emerald-200/80 transition-colors">
-                            <span class="font-bold text-emerald-900 block truncate">Paracetamol + Amoxicillin</span>
-                            <span class="text-[10px] text-emerald-700">ทานร่วมกันได้อย่างปลอดภัย</span>
-                        </button>
-                    </div>
-                </div>
-
-            </div>
-
-        </section>
-
-        <!-- ============================================== -->
-        <!-- RIGHT COLUMN: Analysis & Results (7 Cols)      -->
-        <!-- ============================================== -->
-        <section class="lg:col-span-7 flex flex-col gap-4">
-            
-            <!-- Standby Placeholder Card -->
-            <div id="result-placeholder-card" class="clinical-card p-8 sm:p-10 text-center flex-grow flex flex-col items-center justify-center min-h-[460px]">
-                <div class="w-16 h-16 rounded-2xl bg-teal-50 border border-teal-200/80 flex items-center justify-center text-teal-600 mb-4">
-                    <i class="fa-solid fa-shield-heart text-2xl"></i>
-                </div>
+            <!-- LEFT PANEL: Search, Category & Drug Bucket (5 Columns) -->
+            <div class="lg:col-span-5 space-y-5">
                 
-                <h3 class="text-lg font-bold text-slate-900 font-heading mb-1">
-                    ระบบพร้อมทำการตรวจสอบปฏิสัมพันธ์ของคู่ยา
-                </h3>
-                <p class="text-xs sm:text-sm text-slate-500 max-w-md mx-auto mb-6 leading-relaxed">
-                    เลือกรายการยาที่กำลังรับประทานตั้งแต่ 2 ชนิดขึ้นไป เพื่อประเมินความเสี่ยง ปฏิกิริยาต่อกัน ข้อแนะนำการจัดเวลาทานยา และข้อควรระวังเรื่องอาหาร
-                </p>
+                <div class="glass-panel rounded-2xl shadow-card p-5 sm:p-6 border border-slate-200/90 relative">
+                    
+                    <!-- Search Header -->
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <h2 class="font-heading font-bold text-base sm:text-lg text-slate-900 flex items-center gap-2">
+                                <span>เลือกรายการยา</span>
+                                <span class="text-xs font-normal text-slate-500">(อย่างน้อย 2 รายการ)</span>
+                            </h2>
+                            <p class="text-xs text-slate-500">ค้นหาด้วยชื่อสามัญ (Generic), ชื่อการค้า หรือภาษาไทย</p>
+                        </div>
+                    </div>
 
-                <!-- Severity Level Guide -->
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full max-w-xl text-left text-xs">
-                    <div class="p-3 bg-rose-50 rounded-xl border border-rose-200 flex items-start gap-2.5">
-                        <i class="fa-solid fa-circle-exclamation text-rose-500 text-sm mt-0.5"></i>
-                        <div>
-                            <strong class="text-rose-900 block mb-0.5 font-bold">อันตรายสูง (Major)</strong>
-                            <span class="text-rose-700 text-[11px]">ห้ามทานร่วมกัน เสี่ยงผลข้างเคียงวิกฤต</span>
+                    <!-- Search Input Box -->
+                    <div class="relative mb-3.5">
+                        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                            <i class="fa-solid fa-magnifying-glass text-sm"></i>
+                        </div>
+                        <input 
+                            type="text" 
+                            id="drug-search-input" 
+                            placeholder="พิมพ์ค้นหายา เช่น Paracetamol, ยาลดกรด, เบาหวาน..." 
+                            class="w-full pl-10 pr-10 py-2.5 rounded-xl border border-slate-300 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 text-sm text-slate-900 placeholder:text-slate-400 bg-white shadow-sm transition-all outline-none"
+                            autocomplete="off"
+                        >
+                        <button id="clear-search-btn" onclick="clearSearch()" class="hidden absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600">
+                            <i class="fa-solid fa-xmark text-sm"></i>
+                        </button>
+                    </div>
+
+                    <!-- Category Filter Chips -->
+                    <div class="mb-4">
+                        <div class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-2 flex items-center justify-between">
+                            <span>หมวดหมู่การรักษา</span>
+                            <span id="category-filter-count" class="text-slate-500 font-normal">ทั้งหมด 43 ตัว</span>
+                        </div>
+                        <div class="flex flex-wrap gap-1.5 max-h-24 overflow-y-auto pr-1 no-scrollbar" id="category-pill-container">
+                            <!-- Category chips rendered by JS -->
                         </div>
                     </div>
-                    <div class="p-3 bg-amber-50 rounded-xl border border-amber-200 flex items-start gap-2.5">
-                        <i class="fa-solid fa-triangle-exclamation text-amber-500 text-sm mt-0.5"></i>
-                        <div>
-                            <strong class="text-amber-900 block mb-0.5 font-bold">ควรระวัง (Moderate)</strong>
-                            <span class="text-amber-700 text-[11px]">ปรับเวลาทานยา หรือเฝ้าระวังอาการ</span>
+
+                    <!-- Scrollable Drug Pick-list -->
+                    <div class="border border-slate-200 rounded-xl overflow-hidden bg-slate-50/60 mb-5">
+                        <div class="px-3 py-2 bg-slate-100/80 border-b border-slate-200 text-xs font-semibold text-slate-600 flex items-center justify-between">
+                            <span>รายการยาในระบบ (<span id="visible-drug-count">0</span>)</span>
+                            <span class="text-[10px] text-slate-400">คลิกที่เครื่องหมาย + เพื่อเลือก</span>
+                        </div>
+                        <div id="drug-list" class="max-h-56 overflow-y-auto divide-y divide-slate-200/60 p-1.5 space-y-1">
+                            <!-- Drug items rendered by JS -->
                         </div>
                     </div>
-                    <div class="p-3 bg-emerald-50 rounded-xl border border-emerald-200 flex items-start gap-2.5">
-                        <i class="fa-solid fa-circle-check text-emerald-500 text-sm mt-0.5"></i>
-                        <div>
-                            <strong class="text-emerald-900 block mb-0.5 font-bold">ปลอดภัย (Safe)</strong>
-                            <span class="text-emerald-700 text-[11px]">ไม่พบปฏิกิริยาร้ายแรง ทานร่วมกันได้</span>
+
+                    <!-- Selected Drugs Bucket Tray -->
+                    <div class="pt-4 border-t border-slate-200/80">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="font-heading font-semibold text-xs sm:text-sm text-slate-900 flex items-center gap-2">
+                                <i class="fa-solid fa-basket-shopping text-brand-600"></i>
+                                <span>ยาที่เลือกวิเคราะห์</span>
+                                <span id="selected-badge-count" class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-brand-100 text-brand-800">
+                                    0 / 6
+                                </span>
+                            </span>
+                            <button id="clear-all-btn" onclick="clearSelectedDrugs()" class="text-[11px] text-slate-400 hover:text-rose-600 transition-colors hidden">
+                                ลบทั้งหมด
+                            </button>
                         </div>
+
+                        <!-- Selected items list -->
+                        <div id="selected-drugs-container" class="space-y-2 mb-4 min-h-[50px]">
+                            <!-- Selected pills rendered by JS -->
+                        </div>
+
+                        <!-- Patient Condition Toggles -->
+                        <div class="p-3 rounded-xl bg-slate-100/70 border border-slate-200/70 space-y-2.5 mb-5">
+                            <div class="text-[11px] font-semibold text-slate-500 flex items-center gap-1.5">
+                                <i class="fa-solid fa-user-shield text-slate-400"></i>
+                                <span>ปัจจัยเสี่ยงผู้ป่วยเฉพาะราย (Clinical Risk Factors)</span>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                                <label class="flex items-center gap-2.5 p-2 rounded-lg bg-white border border-slate-200 cursor-pointer hover:border-brand-400 transition-colors">
+                                    <input type="checkbox" id="profile-elderly" onchange="runInteractionCheckIfReady()" class="w-4 h-4 rounded text-brand-600 focus:ring-brand-500 border-slate-300">
+                                    <span class="text-slate-700 font-medium select-none">ผู้สูงอายุ (>65 ปี)</span>
+                                </label>
+                                <label class="flex items-center gap-2.5 p-2 rounded-lg bg-white border border-slate-200 cursor-pointer hover:border-brand-400 transition-colors">
+                                    <input type="checkbox" id="profile-kidney" onchange="runInteractionCheckIfReady()" class="w-4 h-4 rounded text-brand-600 focus:ring-brand-500 border-slate-300">
+                                    <span class="text-slate-700 font-medium select-none">ไตบกพร่อง (eGFR &lt; 60)</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Big Action Button -->
+                        <button 
+                            id="analyze-btn" 
+                            onclick="analyzeInteractions()" 
+                            disabled 
+                            class="w-full py-3.5 px-4 rounded-xl font-heading font-bold text-sm flex items-center justify-center gap-2.5 transition-all shadow-md bg-slate-200 text-slate-400 cursor-not-allowed"
+                        >
+                            <i class="fa-solid fa-bolt text-sm"></i>
+                            <span>วิเคราะห์ปฏิสัมพันธ์คู่ยา</span>
+                        </button>
                     </div>
+
                 </div>
+
             </div>
 
-            <!-- Active Results Container -->
-            <div id="results-container" class="hidden flex flex-col gap-4">
+            <!-- RIGHT PANEL: Results / Empty State / Visual Analytics (7 Columns) -->
+            <div class="lg:col-span-7 space-y-5">
                 
-                <!-- Overall Risk Assessment Card -->
-                <div id="overall-risk-card" class="clinical-card p-5 sm:p-6 print-card">
-                    <!-- Populated dynamically -->
+                <!-- EMPTY / PLACEHOLDER STATE -->
+                <div id="result-placeholder-card" class="glass-panel rounded-2xl shadow-card p-8 sm:p-12 text-center border border-slate-200/90">
+                    <div class="w-20 h-20 mx-auto mb-5 rounded-2xl bg-gradient-to-tr from-brand-100 to-teal-50 border border-brand-200 flex items-center justify-center text-brand-600 shadow-soft">
+                        <i class="fa-solid fa-flask-vial text-3xl"></i>
+                    </div>
+                    <h3 class="font-heading font-bold text-lg sm:text-xl text-slate-800 mb-2">
+                        ระบบพร้อมทำการประเมินความปลอดภัยคู่ยา
+                    </h3>
+                    <p class="text-sm text-slate-500 max-w-md mx-auto mb-6 leading-relaxed">
+                        เลือกยาจากแถบด้านซ้ายอย่างน้อย 2 รายการ หรือกดปุ่ม <strong>"ทดสอบสูตรยาทันที"</strong> ด้านบน เพื่อเริ่มต้นการคำนวณและประเมินความเสี่ยงทางเภสัชกรรม
+                    </p>
+
+                    <!-- Feature Checklist -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-lg mx-auto text-left text-xs">
+                        <div class="p-3 rounded-xl bg-slate-50 border border-slate-200/80">
+                            <div class="text-brand-600 font-bold mb-1 flex items-center gap-1.5 font-heading">
+                                <i class="fa-solid fa-circle-nodes"></i> Pairwise
+                            </div>
+                            <span class="text-slate-500">วิเคราะห์จับคู่ยาครบทุกคู่ $n(n-1)/2$ ตามหลักสถิติ</span>
+                        </div>
+                        <div class="p-3 rounded-xl bg-slate-50 border border-slate-200/80">
+                            <div class="text-amber-600 font-bold mb-1 flex items-center gap-1.5 font-heading">
+                                <i class="fa-solid fa-clock"></i> Chronotherapy
+                            </div>
+                            <span class="text-slate-500">แนะนำการจัดเวลาเว้นมื้อยาเพื่อลดการตีกัน</span>
+                        </div>
+                        <div class="p-3 rounded-xl bg-slate-50 border border-slate-200/80">
+                            <div class="text-indigo-600 font-bold mb-1 flex items-center gap-1.5 font-heading">
+                                <i class="fa-solid fa-utensils"></i> Food & Herb
+                            </div>
+                            <span class="text-slate-500">เตือนอาหารเสริม สมุนไพร และอาหารที่มีผลต่อยา</span>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- 4 KPI Summary Metric Tiles -->
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 no-print">
-                    <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-2xs">
-                        <span class="text-[11px] font-medium text-slate-500">คู่ที่ตรวจทั้งหมด</span>
-                        <div class="flex items-baseline justify-between mt-1">
-                            <span id="kpi-total-pairs" class="text-xl font-bold text-slate-800 font-display">0</span>
-                            <span class="text-xs text-slate-400">คู่</span>
-                        </div>
-                    </div>
-                    <div class="bg-rose-50/70 p-3 rounded-xl border border-rose-200 shadow-2xs">
-                        <span class="text-[11px] font-bold text-rose-700">อันตรายสูง</span>
-                        <div class="flex items-baseline justify-between mt-1">
-                            <span id="kpi-major-count" class="text-xl font-bold text-rose-700 font-display">0</span>
-                            <span class="text-xs text-rose-500">คู่</span>
-                        </div>
-                    </div>
-                    <div class="bg-amber-50/70 p-3 rounded-xl border border-amber-200 shadow-2xs">
-                        <span class="text-[11px] font-bold text-amber-700">ควรระวัง</span>
-                        <div class="flex items-baseline justify-between mt-1">
-                            <span id="kpi-moderate-count" class="text-xl font-bold text-amber-700 font-display">0</span>
-                            <span class="text-xs text-amber-500">คู่</span>
-                        </div>
-                    </div>
-                    <div class="bg-emerald-50/70 p-3 rounded-xl border border-emerald-200 shadow-2xs">
-                        <span class="text-[11px] font-bold text-emerald-700">ปลอดภัย</span>
-                        <div class="flex items-baseline justify-between mt-1">
-                            <span id="kpi-safe-count" class="text-xl font-bold text-emerald-700 font-display">0</span>
-                            <span class="text-xs text-emerald-500">คู่</span>
-                        </div>
-                    </div>
-                </div>
+                <!-- RESULTS CONTAINER (Hidden by default) -->
+                <div id="results-container" class="space-y-5 hidden">
+                    
+                    <!-- 1. Executive Overall Safety Card with SVG Gauge -->
+                    <div id="overall-risk-card" class="glass-panel rounded-2xl shadow-card p-6 border-l-4 border-slate-300 transition-all">
+                        <div class="flex flex-col sm:flex-row items-center justify-between gap-6">
+                            
+                            <!-- Gauge Left Text Info -->
+                            <div class="space-y-2.5 text-center sm:text-left flex-1">
+                                <div class="flex items-center justify-center sm:justify-start gap-2">
+                                    <span id="risk-badge" class="px-2.5 py-1 rounded-full text-xs font-bold flex items-center gap-1.5 font-heading">
+                                        <i class="fa-solid fa-shield-halved"></i>
+                                        <span id="risk-badge-text">กำลังประเมิน...</span>
+                                    </span>
+                                    <span class="text-xs text-slate-400 font-display">
+                                        วิเคราะห์ <span id="pairs-analyzed-count" class="font-bold text-slate-700">0</span> คู่
+                                    </span>
+                                </div>
+                                <h3 id="risk-headline" class="font-heading font-bold text-lg sm:text-xl text-slate-900 leading-snug">
+                                    สรุปภาพรวมความปลอดภัย
+                                </h3>
+                                <p id="risk-summary-text" class="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-xl">
+                                    คำแนะนำจะแสดงที่นี่ตามผลการตรวจ
+                                </p>
+                            </div>
 
-                <!-- Interaction Details Card -->
-                <div class="clinical-card p-5 print-card">
-                    <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-100">
-                        <div>
-                            <h3 class="text-sm font-bold text-slate-900 flex items-center gap-2 font-heading">
-                                <i class="fa-solid fa-code-compare text-teal-600"></i>
-                                <span>ผลการจับคู่วิเคราะห์ (<span id="pairs-analyzed-count">0</span> คู่)</span>
-                            </h3>
-                            <p class="text-xs text-slate-500">รายละเอียดและคำแนะนำแนวทางปฏิบัติสำหรับแต่ละคู่ยา</p>
+                            <!-- Circular SVG Safety Gauge -->
+                            <div class="flex-shrink-0 flex flex-col items-center justify-center relative w-32 h-32">
+                                <svg class="w-32 h-32 transform -rotate-90" viewBox="0 0 120 120">
+                                    <circle cx="60" cy="60" r="50" stroke="#e2e8f0" stroke-width="10" fill="transparent" />
+                                    <circle 
+                                        id="gauge-progress-circle"
+                                        cx="60" 
+                                        cy="60" 
+                                        r="50" 
+                                        stroke="#0d9488" 
+                                        stroke-width="10" 
+                                        stroke-linecap="round"
+                                        stroke-dasharray="314.159"
+                                        stroke-dashoffset="60"
+                                        fill="transparent"
+                                        class="gauge-circle"
+                                    />
+                                </svg>
+                                <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                                    <span id="gauge-score-value" class="text-2xl font-extrabold font-display text-slate-900">100</span>
+                                    <span class="text-[9px] uppercase tracking-wider text-slate-400 font-semibold">คะแนนดัชนี</span>
+                                </div>
+                            </div>
+
                         </div>
-                        <div class="flex items-center gap-2 no-print">
-                            <button id="copy-report-btn" onclick="copySummaryReport()" class="text-xs bg-teal-50 hover:bg-teal-100 text-teal-700 px-3 py-1.5 rounded-lg font-medium flex items-center gap-1.5 border border-teal-200 transition-colors">
-                                <i class="fa-regular fa-copy"></i> คัดลอกสรุปผล
+                    </div>
+
+                    <!-- 2. KPI Summary Tiles -->
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                        <div class="glass-panel p-3.5 rounded-xl border border-slate-200/80 text-center">
+                            <span class="text-[11px] font-semibold text-slate-500 font-heading block mb-0.5">คู่ยาทั้งหมด</span>
+                            <span id="kpi-total-pairs" class="text-xl sm:text-2xl font-extrabold font-display text-slate-800">0</span>
+                        </div>
+                        <div class="glass-panel p-3.5 rounded-xl border border-rose-200/80 bg-rose-50/20 text-center">
+                            <span class="text-[11px] font-semibold text-rose-600 font-heading block mb-0.5">อันตรายสูง (Major)</span>
+                            <span id="kpi-major-count" class="text-xl sm:text-2xl font-extrabold font-display text-rose-600">0</span>
+                        </div>
+                        <div class="glass-panel p-3.5 rounded-xl border border-amber-200/80 bg-amber-50/20 text-center">
+                            <span class="text-[11px] font-semibold text-amber-700 font-heading block mb-0.5">ควรระวัง (Moderate)</span>
+                            <span id="kpi-moderate-count" class="text-xl sm:text-2xl font-extrabold font-display text-amber-600">0</span>
+                        </div>
+                        <div class="glass-panel p-3.5 rounded-xl border border-emerald-200/80 bg-emerald-50/20 text-center">
+                            <span class="text-[11px] font-semibold text-emerald-700 font-heading block mb-0.5">ปลอดภัย (Safe)</span>
+                            <span id="kpi-safe-count" class="text-xl sm:text-2xl font-extrabold font-display text-emerald-600">0</span>
+                        </div>
+                    </div>
+
+                    <!-- 3. Severity Filter Tabs & Print Action -->
+                    <div class="flex items-center justify-between border-b border-slate-200 pb-2 gap-2 flex-wrap">
+                        <div class="flex items-center gap-1 sm:gap-2">
+                            <button onclick="setResultFilter('all')" id="tab-filter-all" class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-brand-600 text-white font-heading">
+                                ทั้งหมด (<span id="count-all">0</span>)
                             </button>
-                            <button onclick="window.print()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1.5 rounded-lg font-medium flex items-center gap-1.5 border border-slate-200 transition-colors">
-                                <i class="fa-solid fa-print"></i> พิมพ์รายงาน
+                            <button onclick="setResultFilter('major')" id="tab-filter-major" class="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-rose-600 hover:bg-rose-50 transition-all font-heading">
+                                อันตราย (<span id="count-major">0</span>)
+                            </button>
+                            <button onclick="setResultFilter('moderate')" id="tab-filter-moderate" class="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-amber-600 hover:bg-amber-50 transition-all font-heading">
+                                ควรระวัง (<span id="count-moderate">0</span>)
+                            </button>
+                            <button onclick="setResultFilter('safe')" id="tab-filter-safe" class="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-emerald-600 hover:bg-emerald-50 transition-all font-heading">
+                                ปลอดภัย (<span id="count-safe">0</span>)
                             </button>
                         </div>
+
+                        <!-- Print Action -->
+                        <button onclick="window.print()" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 bg-white hover:bg-slate-100 border border-slate-200 transition-all flex items-center gap-1.5 font-heading">
+                            <i class="fa-solid fa-print"></i>
+                            <span class="hidden sm:inline">พิมพ์รายงาน</span>
+                        </button>
                     </div>
 
-                    <!-- Severity Filter Tabs -->
-                    <div class="flex items-center gap-1.5 pt-3 text-xs overflow-x-auto no-print no-scrollbar">
-                        <span class="text-slate-400 font-medium whitespace-nowrap mr-1">กรองระดับ:</span>
-                        <button onclick="filterResultSeverity('all', event)" class="res-sev-pill active px-2.5 py-1 rounded-lg bg-slate-800 text-white font-medium whitespace-nowrap transition-colors">ทั้งหมด (<span id="count-all">0</span>)</button>
-                        <button onclick="filterResultSeverity('major', event)" class="res-sev-pill px-2.5 py-1 rounded-lg bg-rose-100 text-rose-800 font-medium hover:bg-rose-200 whitespace-nowrap transition-colors">อันตรายสูง (<span id="count-major">0</span>)</button>
-                        <button onclick="filterResultSeverity('moderate', event)" class="res-sev-pill px-2.5 py-1 rounded-lg bg-amber-100 text-amber-800 font-medium hover:bg-amber-200 whitespace-nowrap transition-colors">ควรระวัง (<span id="count-moderate">0</span>)</button>
-                        <button onclick="filterResultSeverity('safe', event)" class="res-sev-pill px-2.5 py-1 rounded-lg bg-emerald-100 text-emerald-800 font-medium hover:bg-emerald-200 whitespace-nowrap transition-colors">ปลอดภัย (<span id="count-safe">0</span>)</button>
+                    <!-- 4. Interaction Cards List -->
+                    <div id="interaction-cards-list" class="space-y-3.5">
+                        <!-- Cards dynamically injected by JS -->
                     </div>
 
-                    <!-- Interactions List -->
-                    <div id="interactions-list" class="mt-3.5 flex flex-col gap-3">
-                        <!-- Injected dynamically -->
-                    </div>
-                </div>
-
-                <!-- 24-Hour Timing & Administration Advisor -->
-                <div id="timing-advice-card" class="clinical-card p-5 print-card">
-                    <div class="flex items-center gap-2 mb-1">
-                        <i class="fa-regular fa-clock text-teal-600 text-base"></i>
-                        <div>
-                            <h3 class="text-sm font-bold text-slate-900 font-heading">
-                                แนะนำการจัดเวลาทานยา (Administration Timing)
-                            </h3>
-                            <p class="text-xs text-slate-500">การเว้นระยะห่างของยาแต่ละกลุ่มเพื่อป้องกันการลดประสิทธิภาพหรือรบกวนการดูดซึม</p>
+                    <!-- 5. Chronotherapy Timing Suggestions Section -->
+                    <div class="glass-panel rounded-2xl shadow-soft p-5 border border-slate-200/90 print-break">
+                        <div class="flex items-center gap-2.5 mb-3.5">
+                            <div class="w-8 h-8 rounded-lg bg-teal-50 text-brand-600 flex items-center justify-center text-sm">
+                                <i class="fa-regular fa-clock"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-heading font-bold text-sm text-slate-900">
+                                    ตารางการจัดเวลาทานยาที่เหมาะสม (Chronotherapy & Dosing Timing)
+                                </h4>
+                                <p class="text-[11px] text-slate-500">ลดการตีกันของยาและเพิ่มประสิทธิภาพการดูดซึม</p>
+                            </div>
+                        </div>
+                        <div id="timing-advice-content" class="space-y-2.5 text-xs">
+                            <!-- Timing items injected by JS -->
                         </div>
                     </div>
-                    <div id="timing-advice-content" class="mt-3 space-y-2 text-xs text-slate-700">
-                        <!-- Injected dynamically -->
-                    </div>
-                </div>
 
-                <!-- Food & Dietary Caution Deck -->
-                <div id="dietary-alert-card" class="clinical-card p-5 bg-amber-50/40 border-amber-200 print-card">
-                    <div class="flex items-center gap-2 mb-1">
-                        <i class="fa-solid fa-wheat-awn-circle-exclamation text-amber-600 text-base"></i>
-                        <div>
-                            <h3 class="text-sm font-bold text-amber-950 font-heading">
-                                ข้อควรระวังเรื่องอาหารและเครื่องดื่มร่วมกับยาชุดนี้
-                            </h3>
-                            <p class="text-xs text-amber-800/80">อาหาร เครื่องดื่ม หรือสมุนไพรบางชนิดอาจส่งผลต่อระดับยาในกระแสเลือด</p>
+                    <!-- 6. Food & Herbal Warnings Section -->
+                    <div class="glass-panel rounded-2xl shadow-soft p-5 border border-amber-200/70 bg-amber-50/20 print-break">
+                        <div class="flex items-center gap-2.5 mb-3.5">
+                            <div class="w-8 h-8 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center text-sm">
+                                <i class="fa-solid fa-utensils"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-heading font-bold text-sm text-amber-950">
+                                    ข้อควรระวังเรื่องอาหาร เครื่องดื่ม และสมุนไพร
+                                </h4>
+                                <p class="text-[11px] text-amber-700">อาหารที่มีรายงานการรบกวนฤทธิ์ยาในชุดที่เลือก</p>
+                            </div>
+                        </div>
+                        <div id="dietary-alert-content" class="grid grid-cols-1 md:grid-cols-2 gap-2.5 text-xs">
+                            <!-- Dietary advice injected by JS -->
                         </div>
                     </div>
-                    <div id="dietary-alert-content" class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
-                        <!-- Injected dynamically -->
-                    </div>
+
                 </div>
 
             </div>
 
-        </section>
+        </div>
 
     </main>
 
     <!-- Footer -->
-    <footer class="bg-white border-t border-slate-200 py-6 mt-10 text-xs text-slate-500 text-center no-print">
-        <div class="max-w-6xl mx-auto px-4 space-y-2">
-            <div class="flex items-center justify-center gap-2">
-                <span class="font-display font-bold text-slate-800 text-sm">Dose<span class="text-teal-600">match</span></span>
-                <span class="text-slate-300">•</span>
-                <span class="text-slate-500">ระบบตรวจสอบและวิเคราะห์ปฏิสัมพันธ์คู่ยา</span>
-            </div>
-            <p class="text-[11px] text-slate-400 max-w-2xl mx-auto leading-relaxed">
-                ข้อมูลในระบบนี้จัดทำขึ้นเพื่อการศึกษาและการคัดกรองเบื้องต้นเท่านั้น ไม่สามารถใช้ทดแทนการวินิจฉัย ดุลยพินิจของแพทย์ หรือคำปรึกษาของเภสัชกรผู้เชี่ยวชาญได้
+    <footer class="mt-12 border-t border-slate-200/80 bg-white/70 py-6 text-center text-xs text-slate-500">
+        <div class="max-w-7xl mx-auto px-4 space-y-1.5">
+            <p class="font-heading font-medium text-slate-700">
+                Dosematch Clinical Drug Interaction Engine &copy; 2026
             </p>
-            <div class="pt-1 flex justify-center gap-4 text-slate-500 text-xs">
-                <a href="javascript:void(0)" onclick="openModal('disclaimer-modal')" class="hover:text-teal-600 transition-colors">ข้อกำหนดทางการแพทย์</a>
-                <span>•</span>
-                <a href="javascript:void(0)" onclick="openModal('drug-catalog-modal')" class="hover:text-teal-600 transition-colors">สมุดรายชื่อยาทั้งหมด</a>
-                <span>•</span>
-                <a href="javascript:void(0)" onclick="openModal('food-modal')" class="hover:text-teal-600 transition-colors">คู่มือยาและอาหาร</a>
-            </div>
+            <p class="text-[11px] text-slate-400 max-w-xl mx-auto">
+                ระบบนี้พัฒนาขึ้นเพื่อสนับสนุนการศึกษาและเป็นข้อมูลอ้างอิงเบื้องต้นทางเภสัชกรรม ไม่สามารถทดแทนการวินิจฉัยและการตัดสินใจทางการแพทย์ของแพทย์หรือเภสัชกรผู้เชี่ยวชาญได้
+            </p>
         </div>
     </footer>
 
-    <!-- Toast Notification Container -->
-    <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2 pointer-events-none"></div>
-
-    <!-- MODAL: Medical Disclaimer -->
-    <div id="disclaimer-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-white rounded-2xl max-w-xl w-full p-6 shadow-xl border border-slate-200 relative max-h-[85vh] flex flex-col">
-            <button onclick="closeModal('disclaimer-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 transition-colors">
-                <i class="fa-solid fa-xmark text-base"></i>
-            </button>
-            <div class="flex items-center gap-3 mb-3">
-                <div class="w-10 h-10 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center text-lg">
-                    <i class="fa-solid fa-shield-heart"></i>
+    <!-- MODAL 1: Clinical Disclaimer -->
+    <div id="modal-disclaimer" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm hidden">
+        <div class="bg-white rounded-2xl max-w-lg w-full shadow-2xl border border-slate-200 p-6 space-y-4 animate-slide-up">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                <div class="flex items-center gap-2.5 text-brand-700 font-heading font-bold">
+                    <i class="fa-solid fa-shield-halved text-lg"></i>
+                    <span>ข้อตกลงและข้อจำกัดความรับผิดชอบ</span>
                 </div>
-                <div>
-                    <h3 class="text-base font-bold text-slate-900 font-heading">ข้อตกลงและข้อจำกัดความรับผิดชอบ</h3>
-                    <p class="text-xs text-slate-500">Medical Disclaimer & Terms of Use</p>
+                <button onclick="closeModal('modal-disclaimer')" class="w-7 h-7 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 flex items-center justify-center">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+            <div class="space-y-3 text-xs text-slate-600 leading-relaxed max-h-[60vh] overflow-y-auto pr-1">
+                <p>
+                    <strong>Dosematch</strong> เป็นเครื่องมือสารสนเทศทางเภสัชกรรมที่รวบรวมข้อมูลอันตรกิริยาระหว่างยา (Drug-Drug Interactions) จากฐานข้อมูลมาตรฐานสากลและแนวทางเวชปฏิบัติในประเทศไทย
+                </p>
+                <div class="p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-900">
+                    <i class="fa-solid fa-triangle-exclamation mr-1 text-amber-600"></i>
+                    <strong>คำเตือนสำคัญ:</strong> ข้อมูลนี้มีจุดประสงค์เพื่อการศึกษาและการคัดกรองเบื้องต้นเท่านั้น ห้ามนำไปใช้ในการปรับลดหรือหยุดยาด้วยตนเองโดยไม่ปรึกษาแพทย์หรือเภสัชกรประจำตัว
                 </div>
+                <p>
+                    ผู้ป่วยแต่ละรายมีสรีรวิทยา การทำงานของตับ ไต และพันธุกรรมที่แตกต่างกัน หากมีข้อสงสัยหรืออาการผิดปกติ กรุณาปรึกษาบุคลากรทางการแพทย์ทันที
+                </p>
             </div>
-            <div class="text-xs text-slate-600 space-y-2.5 leading-relaxed border-t border-b border-slate-100 py-3.5 overflow-y-auto">
-                <p><strong>1. เพื่อการศึกษาและคัดกรองเบื้องต้น:</strong> ข้อมูลทั้งหมดในระบบ Dosematch รวบรวมจากแหล่งข้อมูลวิชาการเภสัชกรรมสากล มีวัตถุประสงค์เพื่อการเรียนรู้และเป็นเครื่องมือช่วยตรวจสอบเบื้องต้น</p>
-                <p><strong>2. ห้ามหยุดยาหรือปรับขนาดยาเอง:</strong> หากระบบแจ้งเตือนว่ายาที่ท่านรับประทานมีปฏิกิริยาต่อกัน <u>ห้ามหยุดรับประทานยาด้วยตนเองทันที</u> เนื่องจากอาจส่งผลต่อการควบคุมโรคประจำตัว เช่น โรคหัวใจ ความดันโลหิตสูง หรือเบาหวาน ให้ปรึกษาแพทย์เจ้าของไข้หรือเภสัชกร</p>
-                <p><strong>3. ความแตกต่างรายบุคคล:</strong> ปฏิกิริยาของยาอาจขึ้นอยู่กับอายุ น้ำหนัก การทำงานของตับและไต ตลอดจนสภาวะสุขภาพของผู้ป่วยแต่ละท่าน</p>
-                <p><strong>4. อาการฉุกเฉิน:</strong> หากมีอาการผิดปกติรุนแรง เช่น แน่นหน้าอก หายใจไม่ออก มีผื่นคันรุนแรง ถ่ายดำ หรือหมดสติ ให้รีบพบแพทย์หรือโทรสายด่วน 1669 ทันที</p>
-            </div>
-            <div class="mt-4 flex justify-end">
-                <button onclick="closeModal('disclaimer-modal')" class="bg-slate-900 hover:bg-slate-800 text-white font-medium px-5 py-2 rounded-xl text-xs transition-colors">
-                    รับทราบและปิดหน้าต่าง
+            <div class="pt-2">
+                <button onclick="closeModal('modal-disclaimer')" class="w-full py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-heading font-bold text-xs shadow-md transition-all">
+                    รับทราบและเข้าใจข้อตกลง
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL: Drug Catalog -->
-    <div id="drug-catalog-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-white rounded-2xl max-w-3xl w-full p-6 shadow-xl border border-slate-200 relative flex flex-col max-h-[85vh]">
-            <div class="flex items-center justify-between pb-3 border-b border-slate-200">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center text-lg">
-                        <i class="fa-solid fa-book-medical"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-base font-bold text-slate-900 font-heading">สมุดรายชื่อยาในฐานข้อมูล Dosematch</h3>
-                        <p class="text-xs text-slate-500">ค้นหาและกดเพิ่มยาเข้าสู่ชุดตรวจได้ทันที (<span id="modal-drug-count">43 ชนิด</span>)</p>
-                    </div>
+    <!-- MODAL 2: Drug Catalog Search -->
+    <div id="modal-catalog" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm hidden">
+        <div class="bg-white rounded-2xl max-w-2xl w-full shadow-2xl border border-slate-200 p-6 space-y-4 max-h-[85vh] flex flex-col">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3 flex-shrink-0">
+                <div class="flex items-center gap-2.5 text-slate-900 font-heading font-bold text-base">
+                    <i class="fa-solid fa-tablets text-brand-600"></i>
+                    <span>คลังยาทั้งหมดในระบบ (43 รายการ)</span>
                 </div>
-                <button onclick="closeModal('drug-catalog-modal')" class="text-slate-400 hover:text-slate-600 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 transition-colors">
-                    <i class="fa-solid fa-xmark text-base"></i>
+                <button onclick="closeModal('modal-catalog')" class="w-7 h-7 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 flex items-center justify-center">
+                    <i class="fa-solid fa-xmark text-sm"></i>
                 </button>
             </div>
 
-            <!-- Modal Search Filter -->
-            <div class="mt-3 relative">
-                <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400 text-xs"></i>
-                <input type="text" id="modal-catalog-search" placeholder="ค้นหายาในสมุดรายชื่อ เช่น Warfarin, Metformin..."
-                    class="w-full pl-8 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500"
-                    oninput="filterCatalog(this.value)"
-                />
+            <div class="relative flex-shrink-0">
+                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-400 text-xs"></i>
+                <input 
+                    type="text" 
+                    id="modal-catalog-search" 
+                    oninput="filterCatalogModal(this.value)"
+                    placeholder="ค้นหายาในคลัง..." 
+                    class="w-full pl-9 pr-3 py-2 text-xs rounded-xl border border-slate-300 focus:border-brand-500 outline-none"
+                >
             </div>
 
-            <!-- Catalog Items Grid -->
-            <div id="catalog-list" class="mt-3 flex-grow overflow-y-auto divide-y divide-slate-100 pr-1 text-xs">
-                <!-- Populated dynamically -->
+            <div id="modal-catalog-list" class="space-y-1.5 overflow-y-auto flex-grow divide-y divide-slate-100 pr-1">
+                <!-- Catalog items rendered by JS -->
             </div>
 
-            <div class="mt-3 pt-3 border-t border-slate-100 flex justify-between items-center">
-                <span class="text-[11px] text-slate-400">* คลิกปุ่มเพิ่มหรือลบเพื่อจัดชุดยา</span>
-                <button onclick="closeModal('drug-catalog-modal')" class="bg-slate-900 hover:bg-slate-800 text-white font-medium px-4 py-1.5 rounded-lg text-xs transition-colors">
+            <div class="pt-3 border-t border-slate-100 flex items-center justify-between flex-shrink-0">
+                <span class="text-xs text-slate-500">เลือกแล้ว: <strong id="catalog-selected-summary" class="text-brand-600">0</strong> ตัว</span>
+                <button onclick="closeModal('modal-catalog')" class="px-4 py-2 rounded-xl bg-brand-600 text-white font-heading font-bold text-xs hover:bg-brand-700 transition-all">
                     เสร็จสิ้น
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL: Food & Drug Guide -->
-    <div id="food-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-xl border border-slate-200 relative flex flex-col max-h-[85vh]">
-            <div class="flex items-center justify-between pb-3 border-b border-slate-200">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg">
-                        <i class="fa-solid fa-utensils"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-base font-bold text-slate-900 font-heading">คู่มืออาหารและเครื่องดื่มที่ทำปฏิกิริยากับยา</h3>
-                        <p class="text-xs text-slate-500">Food & Drug Interactions Guide</p>
-                    </div>
+    <!-- MODAL 3: Food Interaction Guidelines -->
+    <div id="modal-food-guide" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm hidden">
+        <div class="bg-white rounded-2xl max-w-xl w-full shadow-2xl border border-slate-200 p-6 space-y-4 max-h-[85vh] flex flex-col">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3 flex-shrink-0">
+                <div class="flex items-center gap-2.5 text-amber-700 font-heading font-bold text-base">
+                    <i class="fa-solid fa-utensils"></i>
+                    <span>คู่มืออาหารและสมุนไพรที่มีผลต่อยา</span>
                 </div>
-                <button onclick="closeModal('food-modal')" class="text-slate-400 hover:text-slate-600 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 transition-colors">
-                    <i class="fa-solid fa-xmark text-base"></i>
+                <button onclick="closeModal('modal-food-guide')" class="w-7 h-7 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 flex items-center justify-center">
+                    <i class="fa-solid fa-xmark text-sm"></i>
                 </button>
             </div>
 
-            <div class="mt-3 flex-grow overflow-y-auto space-y-2.5 pr-1 text-xs">
-                <div class="p-3.5 bg-amber-50/70 rounded-xl border border-amber-200">
-                    <h4 class="font-bold text-amber-950 text-xs sm:text-sm flex items-center gap-1.5 mb-1">
-                        <i class="fa-solid fa-wine-glass text-amber-600"></i> เครื่องดื่มแอลกอฮอล์ (Alcohol)
-                    </h4>
-                    <p class="text-amber-900 leading-relaxed">
-                        • <strong>Paracetamol:</strong> เพิ่มพิษต่อตับ เสี่ยงตับวายเฉียบพลัน<br>
-                        • <strong>Lorazepam / Diazepam / Tramadol:</strong> เสริมฤทธิ์กดสมองและการหายใจขั้นรุนแรง หมดสติ<br>
-                        • <strong>Metronidazole:</strong> ก่อให้เกิดอาการหน้าแดง คลื่นไส้ แน่นหน้าอกอย่างรุนแรง (Disulfiram-like reaction)
-                    </p>
+            <div class="space-y-3 overflow-y-auto text-xs text-slate-700 pr-1 leading-relaxed">
+                <div class="p-3 rounded-xl bg-amber-50 border border-amber-200">
+                    <strong class="font-heading font-bold text-amber-950 block mb-1">🍊 น้ำเกรปฟรุต / ส้มโอ (Grapefruit Juice)</strong>
+                    <p class="text-amber-900">ยับยั้งเอนไซม์ CYP3A4 ที่ตับ ทำให้ระดับยา Simvastatin, Amlodipine, Sildenafil เพิ่มสูงขึ้นอย่างอันตราย เสี่ยงต่อกล้ามเนื้อสลายและความดันตกเฉียบพลัน</p>
                 </div>
-                <div class="p-3.5 bg-sky-50/70 rounded-xl border border-sky-200">
-                    <h4 class="font-bold text-sky-950 text-xs sm:text-sm flex items-center gap-1.5 mb-1">
-                        <i class="fa-solid fa-cow text-sky-600"></i> นมและผลิตภัณฑ์จากนม / แคลเซียม (Milk & Calcium)
-                    </h4>
-                    <p class="text-sky-900 leading-relaxed">
-                        แคลเซียมจะจับตัวกับยาปฏิชีวนะกลุ่ม <strong>Ciprofloxacin, Doxycycline</strong> ทำให้ยาไม่ถูกดูดซึม ส่งผลให้การรักษาการติดเชื้อล้มเหลว (ควรเว้นห่างกันอย่างน้อย 2-4 ชั่วโมง)
-                    </p>
+                <div class="p-3 rounded-xl bg-blue-50 border border-blue-200">
+                    <strong class="font-heading font-bold text-blue-950 block mb-1">🥛 นม โยเกิร์ต และผลิตภัณฑ์แคลเซียมสูง</strong>
+                    <p class="text-blue-900">แคลเซียมจะจับตัวกับ Ciprofloxacin, Doxycycline และ Levothyroxine เกิดเป็นสารประกอบเชิงซ้อนที่ไม่ละลายน้ำ ทำให้ร่างกายดูดซึมยาได้น้อยมาก ควรกินห่างกันอย่างน้อย 2-4 ชั่วโมง</p>
                 </div>
-                <div class="p-3.5 bg-emerald-50/70 rounded-xl border border-emerald-200">
-                    <h4 class="font-bold text-emerald-950 text-xs sm:text-sm flex items-center gap-1.5 mb-1">
-                        <i class="fa-solid fa-leaf text-emerald-600"></i> ผักใบเขียวเข้ม (คะน้า บรอกโคลี ผักโขม) & วิตามินเค
-                    </h4>
-                    <p class="text-emerald-900 leading-relaxed">
-                        มีวิตามินเคสูง ซึ่งออกฤทธิ์ต้านยาต้านการแข็งตัวของเลือด <strong>Warfarin</strong> ทำให้ค่า INR ตก เสี่ยงเกิดลิ่มเลือดอุดตัน ควรรับประทานในปริมาณที่สม่ำเสมอในแต่ละวัน
-                    </p>
+                <div class="p-3 rounded-xl bg-emerald-50 border border-emerald-200">
+                    <strong class="font-heading font-bold text-emerald-950 block mb-1">🥬 ผักใบเขียวเข้ม (วิตามิน K สูง)</strong>
+                    <p class="text-emerald-900">เช่น คะน้า ผักโขม บรอกโคลี จะต้านฤทธิ์ยา Warfarin ทำให้เลือดแข็งตัวง่ายขึ้น เสี่ยงต่อลิ่มเลือดอุดตัน ควรทานในปริมาณที่สม่ำเสมอในแต่ละสัปดาห์ ไม่ควรเพิ่มหรือลดกะทันหัน</p>
                 </div>
-                <div class="p-3.5 bg-rose-50/70 rounded-xl border border-rose-200">
-                    <h4 class="font-bold text-rose-950 text-xs sm:text-sm flex items-center gap-1.5 mb-1">
-                        <i class="fa-solid fa-lemon text-rose-600"></i> น้ำเกรปฟรุต (Grapefruit Juice)
-                    </h4>
-                    <p class="text-rose-900 leading-relaxed">
-                        ยับยั้งเอนไซม์ CYP3A4 ทำให้ระดับยา <strong>Simvastatin, Atorvastatin, Amlodipine</strong> สูงขึ้นผิดปกติ เสี่ยงต่อกล้ามเนื้อสลายและความดันตก
-                    </p>
-                </div>
-                <div class="p-3.5 bg-purple-50/70 rounded-xl border border-purple-200">
-                    <h4 class="font-bold text-purple-950 text-xs sm:text-sm flex items-center gap-1.5 mb-1">
-                        <i class="fa-solid fa-pills text-purple-600"></i> แปะก๊วย (Ginkgo Biloba) & โสม & กระเทียมสกัด
-                    </h4>
-                    <p class="text-purple-900 leading-relaxed">
-                        มีฤทธิ์ต้านการเกาะกลุ่มของเกล็ดเลือด เมื่อทานร่วมกับ <strong>Aspirin, Clopidogrel, Warfarin หรือยากลุ่ม NSAIDs</strong> จะเพิ่มความเสี่ยงต่อเลือดออกผิดปกติ
-                    </p>
+                <div class="p-3 rounded-xl bg-rose-50 border border-rose-200">
+                    <strong class="font-heading font-bold text-rose-950 block mb-1">🍷 แอลกอฮอล์</strong>
+                    <p class="text-rose-900">เพิ่มพิษต่อตับรุนแรงเมื่อทานร่วมกับ Paracetamol หรือ Methotrexate, เพิ่มความเสี่ยงเลือดออกในทางเดินอาหารกับ NSAIDs/Aspirin และกดประสาทรุนแรงกับยากลุ่มยานอนหลับ</p>
                 </div>
             </div>
-            
-            <div class="mt-3 pt-3 border-t border-slate-100 flex justify-end">
-                <button onclick="closeModal('food-modal')" class="bg-slate-900 hover:bg-slate-800 text-white font-medium px-4 py-1.5 rounded-lg text-xs">
+
+            <div class="pt-2 border-t border-slate-100 flex-shrink-0">
+                <button onclick="closeModal('modal-food-guide')" class="w-full py-2.5 rounded-xl bg-slate-800 text-white font-heading font-bold text-xs hover:bg-slate-900 transition-all">
                     ปิดหน้าต่าง
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- JAVASCRIPT LOGIC & KNOWLEDGEBASE -->
+    <!-- JAVASCRIPT LOGIC ENGINE -->
     <script>
-        // 1. DRUG DATABASE & RULES
+        // --- 1. CORE DATA INJECTION ---
         const DRUG_DATABASE = [
     {
         "id": "paracetamol",
@@ -1325,7 +1354,6 @@
         ]
     }
 ];
-
         const INTERACTION_RULES = [
     {
         "drugs": [
@@ -1868,321 +1896,235 @@
     }
 ];
 
-        // 2. STATE
+        // --- 2. STATE MANAGEMENT ---
         let selectedDrugs = [];
+        let activeCategory = 'all';
+        let searchQuery = '';
         let currentFilterSeverity = 'all';
-        let currentSearchCategory = 'all';
+        window.currentAnalysisResults = [];
 
-        // 3. INITIALIZATION
+        // Category definitions with aesthetic color themes
+        const CATEGORY_MAP = {
+            'all': { label: 'ทั้งหมด', color: 'slate', icon: 'fa-layer-group' },
+            'pain': { label: 'แก้ปวด/ลดไข้', color: 'rose', icon: 'fa-shield-heart' },
+            'cardiovascular': { label: 'หัวใจ/ความดัน', color: 'red', icon: 'fa-heart-pulse' },
+            'diabetes': { label: 'เบาหวาน', color: 'amber', icon: 'fa-droplet' },
+            'lipid': { label: 'ลดไขมัน', color: 'purple', icon: 'fa-dna' },
+            'antibiotic': { label: 'ต้านเชื้อ/ยาฆ่าเชื้อ', color: 'blue', icon: 'fa-bacterium' },
+            'gi': { label: 'ทางเดินอาหาร', color: 'orange', icon: 'fa-wheat-awn-circle-exclamation' },
+            'anticoagulant': { label: 'เลือด/ต้านการแข็งตัว', color: 'pink', icon: 'fa-syringe' },
+            'neuro': { label: 'ระบบประสาท', color: 'indigo', icon: 'fa-brain' },
+            'endocrine': { label: 'ต่อมไร้ท่อ', color: 'teal', icon: 'fa-flask' },
+            'respiratory': { label: 'ทางเดินหายใจ', color: 'cyan', icon: 'fa-lungs' },
+            'supplement': { label: 'อาหารเสริม/แร่ธาตุ', color: 'emerald', icon: 'fa-leaf' },
+            'other': { label: 'อื่นๆ', color: 'slate', icon: 'fa-capsules' }
+        };
+
+        // --- 3. INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
-            renderDrugCountBadges();
-            initCatalogModal();
+            initCategoryPills();
+            renderDrugList();
+            setupSearchListeners();
             
-            // Close dropdown when clicking outside
-            document.addEventListener('click', (e) => {
-                const searchBox = document.getElementById('drug-search-input');
-                const dropdown = document.getElementById('autocomplete-dropdown');
-                if (searchBox && dropdown && !searchBox.contains(e.target) && !dropdown.contains(e.target)) {
-                    dropdown.classList.add('hidden');
-                }
-            });
-
-            // Keyboard shortcut support
-            document.addEventListener('keydown', (e) => {
-                if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
-                    e.preventDefault();
-                    const input = document.getElementById('drug-search-input');
-                    if (input) {
-                        input.focus();
-                        input.select();
-                    }
-                }
-                if (e.key === 'Escape') {
-                    closeModal('disclaimer-modal');
-                    closeModal('drug-catalog-modal');
-                    closeModal('food-modal');
-                    const dropdown = document.getElementById('autocomplete-dropdown');
-                    if (dropdown) dropdown.classList.add('hidden');
-                }
-            });
+            // Check if URL has preset parameter or show disclaimer first time
+            const hasSeenDisclaimer = localStorage.getItem('dosematch_disclaimer_accepted');
+            if (!hasSeenDisclaimer) {
+                // Show after tiny delay for smooth animation
+                setTimeout(() => openModal('modal-disclaimer'), 300);
+            }
         });
 
-        function renderDrugCountBadges() {
-            const count = DRUG_DATABASE.length;
-            const badge = document.getElementById('db-count-badge');
-            if (badge) badge.innerText = 'ฐานข้อมูล ' + count + ' ชนิด';
-            const navCount = document.getElementById('nav-drug-count');
-            if (navCount) navCount.innerText = count;
-            const modalCount = document.getElementById('modal-drug-count');
-            if (modalCount) modalCount.innerText = count + ' ชนิด';
+        // --- 4. CATEGORY PILLS ---
+        function initCategoryPills() {
+            const container = document.getElementById('category-pill-container');
+            container.innerHTML = '';
+
+            Object.entries(CATEGORY_MAP).forEach(([catKey, catInfo]) => {
+                const btn = document.createElement('button');
+                btn.className = 'category-chip px-2.5 py-1 rounded-lg text-xs font-medium transition-all flex items-center gap-1.5 ' + 
+                    (catKey === activeCategory ? 'bg-brand-600 text-white shadow-sm font-semibold' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200');
+                btn.innerHTML = '<i class="fa-solid ' + catInfo.icon + ' text-[10px]"></i><span>' + catInfo.label + '</span>';
+                btn.onclick = () => selectCategory(catKey);
+                container.appendChild(btn);
+            });
         }
 
-        // Toast Helper
-        function showToast(title, message, type) {
-            type = type || 'info';
-            message = message || '';
-            const container = document.getElementById('toast-container');
-            if (!container) return;
-
-            const toast = document.createElement('div');
-            let bgClass = 'bg-slate-900 text-white';
-            let icon = 'fa-circle-info text-teal-400';
-
-            if (type === 'success') {
-                bgClass = 'bg-slate-900 text-white border border-teal-500/30';
-                icon = 'fa-circle-check text-teal-400';
-            } else if (type === 'warning') {
-                bgClass = 'bg-slate-900 text-white border border-amber-500/30';
-                icon = 'fa-triangle-exclamation text-amber-400';
-            }
-
-            toast.className = 'flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl shadow-lg text-xs pointer-events-auto transition-all ' + bgClass;
-            toast.innerHTML = 
-                '<i class="fa-solid ' + icon + ' text-sm"></i>' +
-                '<div>' +
-                    '<strong class="block font-medium">' + title + '</strong>' +
-                    (message ? '<span class="text-[11px] opacity-80">' + message + '</span>' : '') +
-                '</div>';
-
-            container.appendChild(toast);
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                toast.style.transform = 'translateY(8px)';
-                toast.style.transition = 'all 0.25s ease';
-                setTimeout(() => toast.remove(), 250);
-            }, 2500);
+        function selectCategory(catKey) {
+            activeCategory = catKey;
+            initCategoryPills();
+            renderDrugList();
         }
 
-        // Search Handlers
-        function handleSearchInput(query) {
+        // --- 5. SEARCH & DRUG RENDERING ---
+        function setupSearchListeners() {
+            const searchInput = document.getElementById('drug-search-input');
             const clearBtn = document.getElementById('clear-search-btn');
-            if (query.trim().length > 0) {
-                clearBtn.classList.remove('hidden');
-            } else {
-                clearBtn.classList.add('hidden');
-            }
 
-            const results = searchDrugs(query, currentSearchCategory);
-            renderAutocomplete(results);
+            searchInput.addEventListener('input', (e) => {
+                searchQuery = e.target.value.trim().toLowerCase();
+                clearBtn.classList.toggle('hidden', searchQuery.length === 0);
+                renderDrugList();
+            });
         }
 
-        function handleSearchFocus() {
-            const query = document.getElementById('drug-search-input').value;
-            const results = searchDrugs(query, currentSearchCategory);
-            renderAutocomplete(results);
-        }
-
-        function clearSearchInput() {
+        function clearSearch() {
             const input = document.getElementById('drug-search-input');
             input.value = '';
+            searchQuery = '';
             document.getElementById('clear-search-btn').classList.add('hidden');
-            document.getElementById('autocomplete-dropdown').classList.add('hidden');
+            renderDrugList();
             input.focus();
         }
 
-        function handleSearchKeydown(e) {
-            if (e.key === 'Escape') {
-                document.getElementById('autocomplete-dropdown').classList.add('hidden');
-            }
-        }
-
-        function filterSearchByCategory(category, evt) {
-            currentSearchCategory = category;
-            
-            document.querySelectorAll('.cat-pill').forEach(btn => {
-                btn.className = 'cat-pill px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium whitespace-nowrap transition-colors';
-            });
-            
-            const target = evt ? (evt.currentTarget || evt.target) : null;
-            if (target) {
-                target.className = 'cat-pill active px-3 py-1.5 rounded-lg bg-slate-800 text-white font-medium whitespace-nowrap transition-colors';
-            }
-
-            const query = document.getElementById('drug-search-input').value;
-            const results = searchDrugs(query, category);
-            renderAutocomplete(results);
-        }
-
-        function searchDrugs(rawQuery, category) {
-            category = category || 'all';
-            const query = (rawQuery || '').trim().toLowerCase();
-            
+        function filterDrugs() {
             return DRUG_DATABASE.filter(drug => {
-                const matchCategory = (category === 'all' || drug.category === category);
-                if (!matchCategory) return false;
+                // Category filter
+                const matchesCat = (activeCategory === 'all') || (drug.category === activeCategory);
+                if (!matchesCat) return false;
 
-                if (!query) return true;
+                // Search query filter
+                if (!searchQuery) return true;
 
-                const matchEn = drug.nameEn.toLowerCase().includes(query);
-                const matchTh = drug.nameTh.toLowerCase().includes(query);
-                const matchAlias = drug.aliases && drug.aliases.some(alias => alias.toLowerCase().includes(query));
-                const matchDesc = drug.description && drug.description.toLowerCase().includes(query);
+                const nameEn = drug.nameEn.toLowerCase();
+                const nameTh = drug.nameTh.toLowerCase();
+                const aliases = (drug.aliases || []).map(a => a.toLowerCase()).join(' ');
+                const catTh = (drug.categoryTh || '').toLowerCase();
 
-                return matchEn || matchTh || matchAlias || matchDesc;
+                return nameEn.includes(searchQuery) || 
+                       nameTh.includes(searchQuery) || 
+                       aliases.includes(searchQuery) ||
+                       catTh.includes(searchQuery);
             });
         }
 
-        function renderAutocomplete(results) {
-            const dropdown = document.getElementById('autocomplete-dropdown');
-            dropdown.innerHTML = '';
+        function renderDrugList() {
+            const container = document.getElementById('drug-list');
+            const countEl = document.getElementById('visible-drug-count');
+            const filtered = filterDrugs();
+            
+            countEl.innerText = filtered.length;
+            container.innerHTML = '';
 
-            if (results.length === 0) {
-                dropdown.innerHTML = 
-                    '<div class="p-3 text-center text-xs text-slate-400">' +
-                        '<p>ไม่พบรายการยาที่ค้นหา</p>' +
-                    '</div>';
-                dropdown.classList.remove('hidden');
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="p-6 text-center text-xs text-slate-400">ไม่พบยาที่ตรงกับคำค้นหา</div>';
                 return;
             }
 
-            results.slice(0, 10).forEach(drug => {
+            filtered.forEach(drug => {
                 const isSelected = selectedDrugs.includes(drug.id);
                 const item = document.createElement('div');
-                item.className = 'p-2.5 hover:bg-teal-50/70 cursor-pointer flex items-center justify-between transition-colors ' + (isSelected ? 'bg-teal-50/40' : '');
-                
-                item.onclick = (e) => {
-                    e.stopPropagation();
-                    if (!isSelected) {
-                        addDrug(drug.id);
-                    } else {
-                        removeDrug(drug.id);
-                    }
-                    dropdown.classList.add('hidden');
-                };
+                item.className = 'p-2 sm:p-2.5 rounded-lg flex items-center justify-between gap-2.5 transition-colors ' + 
+                    (isSelected ? 'bg-brand-50/70 border border-brand-200' : 'hover:bg-white bg-transparent');
+
+                const catLabel = drug.categoryTh || (CATEGORY_MAP[drug.category] ? CATEGORY_MAP[drug.category].label : drug.category);
 
                 item.innerHTML = 
-                    '<div class="flex items-center gap-2.5">' +
-                        '<div class="w-7 h-7 rounded-lg ' + (isSelected ? 'bg-teal-600 text-white' : 'bg-slate-100 text-slate-500') + ' flex items-center justify-center text-xs font-bold transition-colors">' +
-                            '<i class="fa-solid fa-capsules"></i>' +
+                    '<div class="min-w-0 flex-1">' +
+                        '<div class="flex items-center gap-1.5 truncate">' +
+                            '<span class="font-bold text-xs sm:text-sm text-slate-900 truncate">' + drug.nameEn + '</span>' +
+                            '<span class="text-[11px] text-slate-500 truncate">(' + drug.nameTh + ')</span>' +
                         '</div>' +
-                        '<div>' +
-                            '<div class="flex items-center gap-1.5">' +
-                                '<span class="font-bold text-xs text-slate-900">' + drug.nameEn + '</span>' +
-                                '<span class="text-[11px] text-slate-500">(' + drug.nameTh + ')</span>' +
-                            '</div>' +
-                            '<span class="text-[10px] text-teal-700 font-medium">' + (drug.categoryTh || drug.category) + '</span>' +
-                        '</div>' +
+                        '<div class="text-[10px] text-slate-400 truncate mt-0.5">' + catLabel + '</div>' +
                     '</div>' +
-                    '<div>' +
-                        (isSelected ? 
-                            '<span class="text-xs font-bold text-teal-700 flex items-center gap-1"><i class="fa-solid fa-check"></i> เลือกแล้ว</span>' : 
-                            '<span class="text-xs text-slate-400 hover:text-teal-700 font-medium"><i class="fa-solid fa-plus mr-0.5"></i> เพิ่ม</span>'
-                        ) +
-                    '</div>';
-                dropdown.appendChild(item);
-            });
+                    '<button data-id="' + drug.id + '" onclick="toggleDrugSelection(this.dataset.id)" ' +
+                        'class="w-7 h-7 rounded-lg flex items-center justify-center text-xs transition-all flex-shrink-0 ' + 
+                        (isSelected ? 'bg-rose-100 text-rose-700 hover:bg-rose-200' : 'bg-brand-100 text-brand-700 hover:bg-brand-600 hover:text-white') + '">' +
+                        '<i class="fa-solid ' + (isSelected ? 'fa-check' : 'fa-plus') + '"></i>' +
+                    '</button>';
 
-            dropdown.classList.remove('hidden');
+                container.appendChild(item);
+            });
         }
 
-        function addDrug(drugId) {
-            if (!selectedDrugs.includes(drugId)) {
-                selectedDrugs.push(drugId);
-                renderSelectedDrugs();
-                runInteractionCheckIfReady();
-                const drug = DRUG_DATABASE.find(d => d.id === drugId);
-                showToast('เพิ่มยาในชุดตรวจแล้ว', drug ? drug.nameEn : '', 'success');
+        // --- 6. DRUG SELECTION LOGIC ---
+        function toggleDrugSelection(id) {
+            if (selectedDrugs.includes(id)) {
+                removeDrug(id);
+            } else {
+                addDrug(id);
             }
         }
 
-        function removeDrug(drugId) {
-            selectedDrugs = selectedDrugs.filter(id => id !== drugId);
-            renderSelectedDrugs();
-            runInteractionCheckIfReady();
+        function addDrug(id) {
+            if (selectedDrugs.includes(id)) return;
+            if (selectedDrugs.length >= 6) {
+                alert('สามารถเลือกตรวจได้สูงสุดครั้งละ 6 รายการเพื่อความปลอดภัยและประสิทธิภาพการวิเคราะห์');
+                return;
+            }
+            selectedDrugs.push(id);
+            updateSelectionUI();
+        }
+
+        function removeDrug(id) {
+            selectedDrugs = selectedDrugs.filter(item => item !== id);
+            updateSelectionUI();
         }
 
         function clearSelectedDrugs() {
             selectedDrugs = [];
-            renderSelectedDrugs();
+            updateSelectionUI();
             resetResultsView();
-            showToast('ล้างรายการยาเรียบร้อย', '', 'info');
         }
 
-        function loadPreset(drugIds) {
-            selectedDrugs = [...drugIds];
-            renderSelectedDrugs();
-            analyzeInteractions();
-            showToast('โหลดคู่ยาตัวอย่างแล้ว', '', 'success');
-        }
-
-        function loadRandomPreset() {
-            const presets = [
-                ['ibuprofen', 'warfarin'],
-                ['ciprofloxacin', 'antacids'],
-                ['omeprazole', 'clopidogrel'],
-                ['paracetamol', 'amoxicillin'],
-                ['prednisolone', 'diclofenac'],
-                ['simvastatin', 'clarithromycin'],
-                ['aspirin', 'clopidogrel'],
-                ['tramadol', 'sertraline']
-            ];
-            const rand = presets[Math.floor(Math.random() * presets.length)];
-            loadPreset(rand);
-        }
-
-        function renderSelectedDrugs() {
-            const container = document.getElementById('selected-drugs-list');
-            const countEl = document.getElementById('selected-count');
-            const btnCountEl = document.getElementById('btn-count');
-            const clearBtn = document.getElementById('clear-all-btn');
+        function updateSelectionUI() {
+            const container = document.getElementById('selected-drugs-container');
+            const badge = document.getElementById('selected-badge-count');
+            const clearAllBtn = document.getElementById('clear-all-btn');
             const analyzeBtn = document.getElementById('analyze-btn');
 
-            countEl.innerText = selectedDrugs.length;
-            btnCountEl.innerText = selectedDrugs.length;
+            badge.innerText = selectedDrugs.length + ' / 6';
+            clearAllBtn.classList.toggle('hidden', selectedDrugs.length === 0);
 
-            if (selectedDrugs.length === 0) {
-                container.innerHTML = 
-                    '<div id="empty-selected-state" class="py-6 text-center text-slate-400 bg-slate-50/70 rounded-xl border border-dashed border-slate-200">' +
-                        '<i class="fa-solid fa-capsules text-2xl text-slate-300 mb-1.5"></i>' +
-                        '<p class="text-xs font-medium text-slate-600">ยังไม่มีรายการยาในชุดตรวจ</p>' +
-                        '<p class="text-[11px] text-slate-400 mt-0.5">ค้นหาและกดเลือกยาเพื่อเริ่มตรวจสอบ (อย่างน้อย 2 ชนิด)</p>' +
-                    '</div>';
-                clearBtn.classList.add('hidden');
-                analyzeBtn.disabled = true;
-                analyzeBtn.className = 'w-full py-3 px-4 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all bg-slate-200 text-slate-400 cursor-not-allowed font-heading';
-                return;
-            }
+            // Re-render drug list to update check marks
+            renderDrugList();
 
-            clearBtn.classList.remove('hidden');
-
+            // Update Analyze Button State
             if (selectedDrugs.length >= 2) {
                 analyzeBtn.disabled = false;
-                analyzeBtn.className = 'w-full py-3 px-4 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all bg-teal-600 hover:bg-teal-700 text-white cursor-pointer shadow-sm font-heading';
+                analyzeBtn.className = 'w-full py-3.5 px-4 rounded-xl font-heading font-bold text-sm flex items-center justify-center gap-2.5 transition-all shadow-md bg-gradient-to-r from-brand-600 to-teal-500 hover:from-brand-700 hover:to-teal-600 text-white cursor-pointer shadow-brand-500/25 active:scale-[0.99]';
             } else {
                 analyzeBtn.disabled = true;
-                analyzeBtn.className = 'w-full py-3 px-4 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all bg-slate-200 text-slate-400 cursor-not-allowed font-heading';
+                analyzeBtn.className = 'w-full py-3.5 px-4 rounded-xl font-heading font-bold text-sm flex items-center justify-center gap-2.5 transition-all shadow-md bg-slate-200 text-slate-400 cursor-not-allowed';
             }
 
             container.innerHTML = '';
+            if (selectedDrugs.length === 0) {
+                container.innerHTML = '<div class="p-3 text-center text-xs text-slate-400 bg-slate-50 rounded-xl border border-dashed border-slate-200">ยังไม่ได้เลือกรายการยา</div>';
+                return;
+            }
+
             selectedDrugs.forEach((id, index) => {
                 const drug = DRUG_DATABASE.find(d => d.id === id);
                 if (!drug) return;
 
                 const item = document.createElement('div');
-                item.className = 'p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100/70 border border-slate-200 flex items-center justify-between gap-2 transition-colors';
+                item.className = 'p-2.5 rounded-xl bg-white border border-slate-200 shadow-sm flex items-center justify-between gap-2.5 animate-slide-up';
                 item.innerHTML = 
-                    '<div class="flex items-center gap-2.5 min-w-0">' +
-                        '<span class="w-5 h-5 rounded-md bg-teal-100 text-teal-800 font-bold flex items-center justify-center text-[11px] flex-shrink-0">' + (index + 1) + '</span>' +
+                    '<div class="flex items-center gap-2 min-w-0">' +
+                        '<span class="w-5 h-5 rounded-md bg-brand-100 text-brand-800 font-bold text-[10px] flex items-center justify-center flex-shrink-0 font-display">' + (index + 1) + '</span>' +
                         '<div class="truncate">' +
                             '<div class="flex items-center gap-1.5 truncate">' +
-                                '<span class="font-bold text-slate-900 text-xs truncate">' + drug.nameEn + '</span>' +
+                                '<span class="font-bold text-xs text-slate-900 truncate">' + drug.nameEn + '</span>' +
                                 '<span class="text-[11px] text-slate-500 truncate">(' + drug.nameTh + ')</span>' +
                             '</div>' +
-                            '<span class="text-[10px] text-teal-700 font-medium">' + (drug.categoryTh || drug.category) + '</span>' +
+                            '<span class="text-[10px] text-brand-700 font-medium">' + (drug.categoryTh || drug.category) + '</span>' +
                         '</div>' +
                     '</div>' +
-                    '<button data-id="' + drug.id + '" onclick="removeDrug(this.dataset.id)" class="text-slate-400 hover:text-rose-600 p-1.5 rounded-lg hover:bg-rose-50 transition-colors flex-shrink-0" title="ลบรายการนี้">' +
-                        '<i class="fa-solid fa-trash-can text-xs"></i>' +
+                    '<button data-id="' + drug.id + '" onclick="removeDrug(this.dataset.id)" class="text-slate-400 hover:text-rose-600 p-1.5 rounded-lg hover:bg-rose-50 transition-colors flex-shrink-0" title="ลบออก">' +
+                        '<i class="fa-solid fa-xmark text-xs"></i>' +
                     '</button>';
+
                 container.appendChild(item);
             });
+
+            // Update modal counter
+            const catCount = document.getElementById('catalog-selected-summary');
+            if (catCount) catCount.innerText = selectedDrugs.length;
         }
 
         function runInteractionCheckIfReady() {
             if (selectedDrugs.length >= 2) {
                 analyzeInteractions();
-            } else {
-                resetResultsView();
             }
         }
 
@@ -2191,7 +2133,24 @@
             document.getElementById('results-container').classList.add('hidden');
         }
 
-        // 4. INTERACTION ENGINE
+        // --- 7. PRESETS (1-Click Test) ---
+        function loadPreset(type) {
+            clearSelectedDrugs();
+            if (type === 'major') {
+                addDrug('warfarin');
+                addDrug('aspirin');
+            } else if (type === 'moderate') {
+                addDrug('ciprofloxacin');
+                addDrug('antacids');
+            } else if (type === 'safe') {
+                addDrug('metformin');
+                addDrug('atorvastatin');
+                addDrug('amlodipine');
+            }
+            setTimeout(() => analyzeInteractions(), 100);
+        }
+
+        // --- 8. CLINICAL INTERACTION ENGINE ---
         function analyzeInteractions() {
             if (selectedDrugs.length < 2) {
                 resetResultsView();
@@ -2201,7 +2160,7 @@
             const isElderly = document.getElementById('profile-elderly').checked;
             const hasKidneyDisease = document.getElementById('profile-kidney').checked;
 
-            // Generate pairwise combinations
+            // Generate pairwise combinations n(n-1)/2
             const pairs = [];
             for (let i = 0; i < selectedDrugs.length; i++) {
                 for (let j = i + 1; j < selectedDrugs.length; j++) {
@@ -2210,10 +2169,9 @@
             }
 
             document.getElementById('pairs-analyzed-count').innerText = pairs.length;
-            const kpiTotal = document.getElementById('kpi-total-pairs');
-            if (kpiTotal) kpiTotal.innerText = pairs.length;
+            document.getElementById('kpi-total-pairs').innerText = pairs.length;
 
-            const interactionResults = [];
+            const results = [];
             let majorCount = 0;
             let moderateCount = 0;
             let safeCount = 0;
@@ -2227,7 +2185,7 @@
                 );
 
                 if (match) {
-                    interactionResults.push({
+                    results.push({
                         drugA,
                         drugB,
                         severity: match.severity,
@@ -2241,12 +2199,12 @@
                     else if (match.severity === 'moderate') moderateCount++;
                     else if (match.severity === 'safe') safeCount++;
                 } else {
-                    interactionResults.push({
+                    results.push({
                         drugA,
                         drugB,
                         severity: 'safe',
-                        title: 'ไม่พบรายงานการเกิดปฏิกิริยารุนแรง (No Known Interaction)',
-                        mechanism: 'ยาทั้งสองชนิด (' + drugA.nameEn + ' และ ' + drugB.nameEn + ') สามารถรับประทานร่วมกันได้ตามปกติ โดยไม่พบข้อมูลการรบกวนการดูดซึมหรือเสริมฤทธิ์ข้างเคียงที่เป็นอันตราย',
+                        title: 'ไม่พบรายงานการเกิดปฏิกิริยารุนแรง (No Known Major Interaction)',
+                        mechanism: 'ยาทั้งสองชนิด (' + drugA.nameEn + ' และ ' + drugB.nameEn + ') สามารถรับประทานร่วมกันได้ตามปกติ โดยไม่พบข้อมูลการรบกวนการดูดซึมหรือเสริมฤทธิ์ข้างเคียงที่เป็นอันตรายในเกณฑ์มาตรฐาน',
                         symptoms: 'ไม่มีอาการที่ต้องเฝ้าระวังเป็นพิเศษ',
                         management: 'รับประทานยาตามขนาดและเวลาที่แพทย์หรือเภสัชกรแนะนำอย่างต่อเนื่อง'
                     });
@@ -2254,401 +2212,311 @@
                 }
             });
 
-            // Update Badges & Counters
-            document.getElementById('count-all').innerText = interactionResults.length;
+            // Update Counts
+            document.getElementById('count-all').innerText = results.length;
             document.getElementById('count-major').innerText = majorCount;
             document.getElementById('count-moderate').innerText = moderateCount;
             document.getElementById('count-safe').innerText = safeCount;
 
-            const kpiMajor = document.getElementById('kpi-major-count');
-            if (kpiMajor) kpiMajor.innerText = majorCount;
-            const kpiModerate = document.getElementById('kpi-moderate-count');
-            if (kpiModerate) kpiModerate.innerText = moderateCount;
-            const kpiSafe = document.getElementById('kpi-safe-count');
-            if (kpiSafe) kpiSafe.innerText = safeCount;
+            document.getElementById('kpi-major-count').innerText = majorCount;
+            document.getElementById('kpi-moderate-count').innerText = moderateCount;
+            document.getElementById('kpi-safe-count').innerText = safeCount;
 
-            // Show Results
+            // Store globally & display
+            window.currentAnalysisResults = results;
             document.getElementById('result-placeholder-card').classList.add('hidden');
             document.getElementById('results-container').classList.remove('hidden');
 
-            // Render Overall Assessment
             renderOverallRiskCard(majorCount, moderateCount, safeCount, isElderly, hasKidneyDisease);
-
-            // Store results globally
-            window.currentAnalysisResults = interactionResults;
-
-            // Render Interaction List
-            renderInteractionList(interactionResults, currentFilterSeverity);
-
-            // Render Timings and Dietary
+            renderInteractionList(results, currentFilterSeverity);
             renderTimingAdvice();
             renderDietaryAdvice();
         }
 
+        // --- 9. RENDER OVERALL GAUGE & ASSESSMENT ---
         function renderOverallRiskCard(major, moderate, safe, isElderly, hasKidney) {
             const card = document.getElementById('overall-risk-card');
+            const badge = document.getElementById('risk-badge');
+            const badgeText = document.getElementById('risk-badge-text');
+            const headline = document.getElementById('risk-headline');
+            const summary = document.getElementById('risk-summary-text');
+            const scoreVal = document.getElementById('gauge-score-value');
+            const gaugeCircle = document.getElementById('gauge-progress-circle');
 
+            // Calculate Safety Score 0 - 100
             let score = 100;
             if (major > 0) {
-                score = Math.max(20, 100 - (major * 35) - (moderate * 15));
+                score = Math.max(15, 100 - (major * 35) - (moderate * 15));
             } else if (moderate > 0) {
-                score = Math.max(60, 100 - (moderate * 15));
+                score = Math.max(55, 100 - (moderate * 15));
             }
 
-            let borderClass = 'border-emerald-200 bg-emerald-50/40';
-            let strokeColor = '#059669';
-            let statusBadge = 'bg-emerald-100 text-emerald-800 border-emerald-200';
-            let statusBadgeText = 'ปลอดภัยสูง (Safe)';
-            let statusHeadline = 'ไม่พบรายงานคู่ยาที่มีข้อห้ามใช้ร้ายแรง';
-            let summaryText = 'รายการยาที่เลือกสามารถรับประทานร่วมกันได้อย่างปลอดภัยตามขนาดและคำแนะนำบนฉลากยา';
+            // Additional risk factor deductions
+            if (isElderly && (major > 0 || moderate > 0)) score = Math.max(10, score - 8);
+            if (hasKidney && (major > 0 || moderate > 0)) score = Math.max(10, score - 10);
+
+            scoreVal.innerText = score;
+
+            // Update SVG circle stroke-dashoffset (circumference = 2 * PI * 50 = 314.159)
+            const circumference = 314.159;
+            const offset = circumference - (score / 100) * circumference;
+            gaugeCircle.style.strokeDashoffset = offset;
 
             if (major > 0) {
-                borderClass = 'border-rose-300 bg-rose-50/50';
-                strokeColor = '#e11d48';
-                statusBadge = 'bg-rose-100 text-rose-800 border-rose-300';
-                statusBadgeText = 'พบข้อควรระวังขั้นวิกฤต (Major)';
-                statusHeadline = 'พบข้อควรระวังขั้นอันตราย ' + major + ' คู่ — ควรปรึกษาแพทย์หรือเภสัชกร';
-                summaryText = 'มียาที่มีความเสี่ยงสูงเมื่อรับประทานร่วมกัน อาจเสี่ยงต่อภาวะเลือดออกรุนแรง หัวใจเต้นผิดจังหวะ หรือกล้ามเนื้อสลาย แนะนำให้ปรึกษาแพทย์เพื่อปรับแผนการรักษา';
+                card.className = 'glass-panel rounded-2xl shadow-card p-6 border-l-4 border-rose-500 bg-rose-50/20';
+                badge.className = 'px-2.5 py-1 rounded-full text-xs font-bold flex items-center gap-1.5 font-heading bg-rose-100 text-rose-800 border border-rose-200';
+                badgeText.innerText = 'ระดับความเสี่ยงสูง (High Clinical Risk)';
+                headline.innerText = 'ตรวจพบ ' + major + ' คู่ยาที่อาจเกิดอันตรกิริยารุนแรง';
+                summary.innerHTML = 'มียาที่มีความเสี่ยงสูงเมื่อรับประทานร่วมกัน อาจทำให้เกิดผลข้างเคียงร้ายแรง เช่น เลือดออกผิดปกติ, หัวใจเต้นผิดจังหวะ หรือกล้ามเนื้อสลาย <strong>ควรปรึกษาแพทย์หรือเภสัชกรเพื่อปรับเปลี่ยนยาหรือจัดเวลาอย่างเคร่งครัด</strong>';
+                gaugeCircle.style.stroke = '#e11d48'; // Rose-600
             } else if (moderate > 0) {
-                borderClass = 'border-amber-300 bg-amber-50/50';
-                strokeColor = '#d97706';
-                statusBadge = 'bg-amber-100 text-amber-800 border-amber-300';
-                statusBadgeText = 'ควรระวัง (Moderate)';
-                statusHeadline = 'พบข้อควรระวัง ' + moderate + ' คู่ — แนะนำให้เว้นระยะห่างหรือสังเกตอาการ';
-                summaryText = 'ยาบางตัวอาจลดการดูดซึมของกันและกัน หรือเสริมฤทธิ์ข้างเคียง สามารถจัดการได้โดยการเว้นระยะเวลาทานยาอย่างน้อย 2-4 ชั่วโมง';
+                card.className = 'glass-panel rounded-2xl shadow-card p-6 border-l-4 border-amber-500 bg-amber-50/20';
+                badge.className = 'px-2.5 py-1 rounded-full text-xs font-bold flex items-center gap-1.5 font-heading bg-amber-100 text-amber-800 border border-amber-200';
+                badgeText.innerText = 'ควรระวังปานกลาง (Moderate Risk)';
+                headline.innerText = 'พบข้อควรระวัง ' + moderate + ' คู่ — แนะนำให้เว้นระยะห่างมื้อยา';
+                summary.innerHTML = 'ยาบางรายการอาจรบกวนการดูดซึมหรือเสริมฤทธิ์ข้างเคียงเล็กน้อยถึงปานกลาง โดยทั่วไปสามารถจัดการได้ด้วยการ<strong>เว้นระยะเวลาทานยาห่างกัน 2-4 ชั่วโมง</strong> หรือสังเกตอาการอย่างต่อเนื่อง';
+                gaugeCircle.style.stroke = '#d97706'; // Amber-600
+            } else {
+                card.className = 'glass-panel rounded-2xl shadow-card p-6 border-l-4 border-emerald-500 bg-emerald-50/20';
+                badge.className = 'px-2.5 py-1 rounded-full text-xs font-bold flex items-center gap-1.5 font-heading bg-emerald-100 text-emerald-800 border border-emerald-200';
+                badgeText.innerText = 'ระดับความปลอดภัยสูง (Safe Combination)';
+                headline.innerText = 'ไม่พบรายงานการตีกันที่รุนแรงในชุดยานี้';
+                summary.innerHTML = 'รายการยาทั้งหมดที่เลือกสามารถรับประทานร่วมกันได้อย่างปลอดภัยตามขนาดที่แพทย์สั่ง แนะนำรับประทานยาอย่างสม่ำเสมอและตรงเวลา';
+                gaugeCircle.style.stroke = '#0d9488'; // Brand Teal
             }
-
-            let profileNotice = '';
-            if (isElderly || hasKidney) {
-                profileNotice = 
-                    '<div class="mt-3 p-3 bg-white/90 rounded-xl border border-slate-200 text-xs text-slate-700 flex items-start gap-2.5">' +
-                        '<i class="fa-solid fa-user-shield text-teal-600 text-sm mt-0.5 flex-shrink-0"></i>' +
-                        '<div>' +
-                            '<strong class="text-slate-900 block mb-0.5 font-heading">ข้อพิจารณาเฉพาะบุคคล:</strong>' +
-                            (isElderly ? '• ผู้สูงอายุ: ตับและไตทำงานลดลง ทำให้ยาขับออกจากร่างกายช้าลง จึงมีความไวต่อผลข้างเคียงสูงกว่าปกติ ' : '') +
-                            (hasKidney ? '• โรคไต: ควรหลีกเลี่ยงยาแก้ปวดกลุ่ม NSAIDs และระมัดระวังยาที่ขับออกทางไตเพื่อป้องกันไตเสื่อมหรือเกลือแร่คั่ง' : '') +
-                        '</div>' +
-                    '</div>';
-            }
-
-            const circumference = 201;
-            const offset = circumference - (circumference * score / 100);
-
-            card.className = 'clinical-card p-5 sm:p-6 border ' + borderClass + ' print-card';
-            card.innerHTML = 
-                '<div class="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-5">' +
-                    '<!-- Circular Score Gauge -->' +
-                    '<div class="relative w-20 h-20 flex-shrink-0 flex items-center justify-center">' +
-                        '<svg class="w-20 h-20 transform -rotate-90" viewBox="0 0 80 80">' +
-                            '<circle cx="40" cy="40" r="32" stroke="#e2e8f0" stroke-width="6" fill="transparent"></circle>' +
-                            '<circle cx="40" cy="40" r="32" stroke="' + strokeColor + '" stroke-width="6" stroke-linecap="round" fill="transparent" ' +
-                                'stroke-dasharray="' + circumference + '" stroke-dashoffset="' + offset + '" style="transition: stroke-dashoffset 0.8s ease;"></circle>' +
-                        '</svg>' +
-                        '<div class="absolute flex flex-col items-center justify-center">' +
-                            '<span class="text-lg font-bold font-display text-slate-900 leading-none">' + score + '%</span>' +
-                            '<span class="text-[9px] font-medium text-slate-400 mt-0.5">ความปลอดภัย</span>' +
-                        '</div>' +
-                    '</div>' +
-
-                    '<div class="flex-grow text-center sm:text-left">' +
-                        '<div class="flex flex-wrap items-center justify-center sm:justify-start gap-2 mb-1">' +
-                            '<span class="text-xs font-bold px-2.5 py-0.5 rounded-md border ' + statusBadge + '">' +
-                                statusBadgeText +
-                            '</span>' +
-                        '</div>' +
-                        '<h3 class="text-base font-bold text-slate-900 font-heading mt-1">' + statusHeadline + '</h3>' +
-                        '<p class="text-xs sm:text-sm text-slate-600 mt-1 leading-relaxed">' + summaryText + '</p>' +
-                        profileNotice +
-                    '</div>' +
-                '</div>';
         }
 
-        function filterResultSeverity(severity, evt) {
-            currentFilterSeverity = severity;
+        // --- 10. FILTER TABS & INTERACTION LIST ---
+        function setResultFilter(filter) {
+            currentFilterSeverity = filter;
 
-            document.querySelectorAll('.res-sev-pill').forEach(btn => {
-                const text = btn.innerText;
-                if (text.includes('อันตราย')) {
-                    btn.className = 'res-sev-pill px-2.5 py-1 rounded-lg bg-rose-100 text-rose-800 font-medium hover:bg-rose-200 whitespace-nowrap transition-colors';
-                } else if (text.includes('ควรระวัง')) {
-                    btn.className = 'res-sev-pill px-2.5 py-1 rounded-lg bg-amber-100 text-amber-800 font-medium hover:bg-amber-200 whitespace-nowrap transition-colors';
-                } else if (text.includes('ปลอดภัย')) {
-                    btn.className = 'res-sev-pill px-2.5 py-1 rounded-lg bg-emerald-100 text-emerald-800 font-medium hover:bg-emerald-200 whitespace-nowrap transition-colors';
+            const tabs = ['all', 'major', 'moderate', 'safe'];
+            tabs.forEach(t => {
+                const el = document.getElementById('tab-filter-' + t);
+                if (t === filter) {
+                    el.className = 'px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-brand-600 text-white font-heading shadow-sm';
                 } else {
-                    btn.className = 'res-sev-pill px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 font-medium hover:bg-slate-200 whitespace-nowrap transition-colors';
+                    el.className = 'px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-100 transition-all font-heading';
                 }
             });
 
-            const target = evt ? (evt.currentTarget || evt.target) : null;
-            if (target) {
-                target.className = 'res-sev-pill active px-2.5 py-1 rounded-lg bg-slate-800 text-white font-medium whitespace-nowrap transition-colors';
-            }
-
-            if (window.currentAnalysisResults) {
-                renderInteractionList(window.currentAnalysisResults, severity);
-            }
-        }
-
-        function copySummaryReport() {
-            if (!window.currentAnalysisResults || window.currentAnalysisResults.length === 0) return;
-
-            const drugNames = selectedDrugs.map(id => {
-                const d = DRUG_DATABASE.find(x => x.id === id);
-                return d ? d.nameEn + ' (' + d.nameTh + ')' : id;
-            }).join(', ');
-
-            let report = "รายงานผลการตรวจสอบปฏิสัมพันธ์คู่ยา (Dosematch)\n";
-            report += "วันที่ตรวจสอบ: " + new Date().toLocaleDateString('th-TH') + " " + new Date().toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'}) + "\n";
-            report += "รายการยาในชุดตรวจ (" + selectedDrugs.length + " ชนิด): " + drugNames + "\n\n";
-
-            const majorList = window.currentAnalysisResults.filter(r => r.severity === 'major');
-            const moderateList = window.currentAnalysisResults.filter(r => r.severity === 'moderate');
-            const safeList = window.currentAnalysisResults.filter(r => r.severity === 'safe');
-
-            report += "สรุปผลภาพรวม: อันตรายสูง " + majorList.length + " คู่ | ควรระวัง " + moderateList.length + " คู่ | ปลอดภัย " + safeList.length + " คู่\n\n";
-
-            if (majorList.length > 0) {
-                report += "[อันตรายสูง - Major Interactions]\n";
-                majorList.forEach((m, idx) => {
-                    report += (idx+1) + ". " + m.drugA.nameEn + " + " + m.drugB.nameEn + "\n   - ความเสี่ยง: " + m.title + "\n   - คำแนะนำ: " + m.management + "\n";
-                });
-                report += "\n";
-            }
-
-            if (moderateList.length > 0) {
-                report += "[ควรระวัง - Moderate Interactions]\n";
-                moderateList.forEach((m, idx) => {
-                    report += (idx+1) + ". " + m.drugA.nameEn + " + " + m.drugB.nameEn + "\n   - ความเสี่ยง: " + m.title + "\n   - คำแนะนำ: " + m.management + "\n";
-                });
-                report += "\n";
-            }
-
-            report += "หมายเหตุ: ข้อมูลนี้จัดทำขึ้นเพื่อการคัดกรองเบื้องต้น ห้ามหยุดยาเองโดยไม่ปรึกษาแพทย์หรือเภสัชกร";
-
-            navigator.clipboard.writeText(report).then(() => {
-                showToast('คัดลอกสรุปผลสำเร็จ', 'พร้อมสำหรับส่งต่อหรือแนบประวัติการรักษา', 'success');
-            }).catch(() => {
-                alert('ไม่สามารถคัดลอกได้อัตโนมัติ กรุณาลองใหม่อีกครั้ง');
-            });
+            renderInteractionList(window.currentAnalysisResults, filter);
         }
 
         function renderInteractionList(results, filter) {
-            const container = document.getElementById('interactions-list');
+            const container = document.getElementById('interaction-cards-list');
             container.innerHTML = '';
 
-            const filtered = results.filter(r => {
-                if (filter === 'all') return true;
-                return r.severity === filter;
-            });
+            let filtered = results;
+            if (filter !== 'all') {
+                filtered = results.filter(r => r.severity === filter);
+            }
 
             if (filtered.length === 0) {
-                container.innerHTML = 
-                    '<div class="p-6 text-center text-xs text-slate-400 bg-slate-50 rounded-xl border border-slate-200">' +
-                        '<p>ไม่มีรายการปฏิสัมพันธ์ในระดับนี้</p>' +
-                    '</div>';
+                container.innerHTML = '<div class="p-8 text-center text-xs text-slate-400 bg-white rounded-xl border border-slate-200">ไม่พบรายการในหมวดนี้</div>';
                 return;
             }
 
-            filtered.sort((a, b) => {
-                const weight = { 'major': 3, 'moderate': 2, 'safe': 1 };
-                return weight[b.severity] - weight[a.severity];
-            });
+            // Sort: major first, then moderate, then safe
+            const rank = { 'major': 3, 'moderate': 2, 'safe': 1 };
+            filtered.sort((a, b) => rank[b.severity] - rank[a.severity]);
 
-            filtered.forEach((item) => {
+            filtered.forEach(item => {
                 const card = document.createElement('div');
                 
+                let borderAccent = 'border-l-emerald-500';
                 let badgeClass = 'bg-emerald-100 text-emerald-800 border-emerald-200';
+                let badgeText = 'ปลอดภัย (Safe)';
                 let badgeIcon = 'fa-circle-check';
-                let badgeLabel = 'ปลอดภัย (Safe)';
-                let borderTheme = 'border-slate-200 bg-white';
 
                 if (item.severity === 'major') {
-                    badgeClass = 'bg-rose-100 text-rose-800 border-rose-300';
-                    badgeIcon = 'fa-circle-exclamation';
-                    badgeLabel = 'อันตรายสูง (Major)';
-                    borderTheme = 'border-rose-200 bg-rose-50/20';
-                } else if (item.severity === 'moderate') {
-                    badgeClass = 'bg-amber-100 text-amber-800 border-amber-300';
+                    borderAccent = 'border-l-rose-500';
+                    badgeClass = 'bg-rose-100 text-rose-800 border-rose-200';
+                    badgeText = 'อันตรายสูง (Major)';
                     badgeIcon = 'fa-triangle-exclamation';
-                    badgeLabel = 'ควรระวัง (Moderate)';
-                    borderTheme = 'border-amber-200 bg-amber-50/20';
+                } else if (item.severity === 'moderate') {
+                    borderAccent = 'border-l-amber-500';
+                    badgeClass = 'bg-amber-100 text-amber-800 border-amber-200';
+                    badgeText = 'ควรระวัง (Moderate)';
+                    badgeIcon = 'fa-circle-exclamation';
                 }
 
-                card.className = 'p-4 rounded-xl border ' + borderTheme + ' text-xs print-card';
+                card.className = 'glass-panel rounded-xl p-4 sm:p-5 border border-slate-200 border-l-4 ' + borderAccent + ' space-y-3 interactive-card print-break';
                 card.innerHTML = 
-                    '<div class="flex items-center justify-between gap-2 flex-wrap mb-2 pb-2 border-b border-slate-100">' +
+                    '<div class="flex items-center justify-between gap-3 flex-wrap">' +
                         '<div class="flex items-center gap-2">' +
-                            '<span class="font-bold text-sm text-slate-900 font-heading">' + item.drugA.nameEn + '</span>' +
-                            '<span class="w-4 h-4 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center text-[9px]"><i class="fa-solid fa-link"></i></span>' +
-                            '<span class="font-bold text-sm text-slate-900 font-heading">' + item.drugB.nameEn + '</span>' +
+                            '<span class="font-bold text-sm sm:text-base text-slate-900 font-heading">' + item.drugA.nameEn + '</span>' +
+                            '<span class="w-5 h-5 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center text-[10px]">' +
+                                '<i class="fa-solid fa-link"></i>' +
+                            '</span>' +
+                            '<span class="font-bold text-sm sm:text-base text-slate-900 font-heading">' + item.drugB.nameEn + '</span>' +
                         '</div>' +
-                        '<span class="text-[11px] font-bold px-2 py-0.5 rounded-md border ' + badgeClass + ' flex items-center gap-1.5">' +
-                            '<i class="fa-solid ' + badgeIcon + '"></i> ' + badgeLabel +
+                        '<span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold border ' + badgeClass + ' flex items-center gap-1 font-heading">' +
+                            '<i class="fa-solid ' + badgeIcon + '"></i> ' + badgeText +
                         '</span>' +
                     '</div>' +
 
-                    '<h4 class="font-bold text-xs sm:text-sm text-slate-900 mb-2 font-heading">' + item.title + '</h4>' +
+                    '<h4 class="font-heading font-semibold text-xs sm:text-sm text-slate-800">' + item.title + '</h4>' +
 
-                    '<div class="space-y-2 leading-relaxed">' +
-                        '<div class="bg-slate-50 p-2.5 rounded-lg border border-slate-100">' +
-                            '<strong class="text-slate-700 block mb-0.5 font-heading">กลไกการเกิดปฏิกิริยา:</strong>' +
+                    '<div class="space-y-2 text-xs leading-relaxed">' +
+                        '<div class="p-2.5 rounded-lg bg-slate-50 border border-slate-100">' +
+                            '<span class="font-bold text-slate-700 block mb-0.5 font-heading">กลไกการเกิดปฏิกิริยา:</span>' +
                             '<p class="text-slate-600">' + item.mechanism + '</p>' +
                         '</div>' +
 
                         (item.severity !== 'safe' ? 
-                            '<div class="bg-slate-50 p-2.5 rounded-lg border border-slate-100">' +
-                                '<strong class="text-slate-700 block mb-0.5 font-heading">อาการที่ต้องเฝ้าระวัง:</strong>' +
-                                '<p class="text-slate-600">' + item.symptoms + '</p>' +
+                            '<div class="p-2.5 rounded-lg bg-amber-50/60 border border-amber-100">' +
+                                '<span class="font-bold text-amber-900 block mb-0.5 font-heading">อาการที่ต้องเฝ้าระวัง:</span>' +
+                                '<p class="text-amber-800">' + item.symptoms + '</p>' +
                             '</div>' +
-
-                            '<div class="bg-teal-50/60 p-2.5 rounded-lg border border-teal-200/70">' +
-                                '<strong class="text-teal-950 block mb-0.5 font-heading">แนวทางปฏิบัติ / การจัดการ:</strong>' +
+                            '<div class="p-2.5 rounded-lg bg-teal-50/70 border border-teal-200/80">' +
+                                '<span class="font-bold text-teal-950 block mb-0.5 font-heading">แนวทางปฏิบัติและการจัดการ:</span>' +
                                 '<p class="text-teal-900 font-medium">' + item.management + '</p>' +
                             '</div>'
-                         : 
-                            '<div class="bg-emerald-50/60 p-2.5 rounded-lg border border-emerald-200/70">' +
-                                '<strong class="text-emerald-950 block mb-0.5 font-heading">คำแนะนำ:</strong>' +
+                        : 
+                            '<div class="p-2.5 rounded-lg bg-emerald-50/70 border border-emerald-200/80">' +
+                                '<span class="font-bold text-emerald-950 block mb-0.5 font-heading">คำแนะนำ:</span>' +
                                 '<p class="text-emerald-900 font-medium">' + item.management + '</p>' +
                             '</div>'
                         ) +
+                    '</div>';
+
+                container.appendChild(card);
+            });
+        }
+
+        // --- 11. TIMING & CHRONOTHERAPY ADVICE ---
+        function renderTimingAdvice() {
+            const container = document.getElementById('timing-advice-content');
+            container.innerHTML = '';
+
+            const list = [];
+            const hasChelator = selectedDrugs.some(id => ['antacids', 'calcium', 'iron'].includes(id));
+            const hasChelatedAntibiotic = selectedDrugs.some(id => ['ciprofloxacin', 'doxycycline'].includes(id));
+
+            if (hasChelator && hasChelatedAntibiotic) {
+                list.push({
+                    icon: 'fa-hourglass-half text-amber-500',
+                    title: 'เว้นระยะห่างยาฆ่าเชื้อกับยาลดกรด/แร่ธาตุ 2-4 ชั่วโมง',
+                    desc: 'ยาลดกรด แคลเซียม หรือธาตุเหล็กจะดักจับตัวยาฆ่าเชื้อ ทำให้ยาดูดซึมไม่ได้ แนะนำทานยาฆ่าเชื้อก่อนยาลดกรด 2 ชั่วโมง หรือหลังยาลดกรด 4 ชั่วโมง'
+                });
+            }
+
+            if (selectedDrugs.includes('aspirin') && selectedDrugs.includes('ibuprofen')) {
+                list.push({
+                    icon: 'fa-clock text-rose-500',
+                    title: 'รับประทาน Aspirin ก่อน Ibuprofen อย่างน้อย 1 ชั่วโมง',
+                    desc: 'Ibuprofen จะแย่งจับตัวรับเกล็ดเลือด ทำให้ฤทธิ์ป้องกันหลอดเลือดสมองและหัวใจของ Aspirin ลดลงอย่างมาก'
+                });
+            }
+
+            if (selectedDrugs.includes('omeprazole')) {
+                list.push({
+                    icon: 'fa-sun text-teal-500',
+                    title: 'Omeprazole ควรรับประทานก่อนอาหารเช้า 30-60 นาที',
+                    desc: 'เพื่อให้ตัวยาดูดซึมและออกฤทธิ์ยับยั้งปั๊มผลิตกรดในกระเพาะอาหารได้อย่างมีประสิทธิภาพสูงสุดตลอดทั้งวัน'
+                });
+            }
+
+            if (selectedDrugs.includes('simvastatin')) {
+                list.push({
+                    icon: 'fa-moon text-indigo-500',
+                    title: 'Simvastatin แนะนำรับประทานเวลาก่อนนอน',
+                    desc: 'เนื่องจากตับจะสังเคราะห์คอเลสเตอรอลมากที่สุดในเวลากลางคืน การทานก่อนนอนช่วยให้ออกฤทธิ์ได้เต็มที่'
+                });
+            }
+
+            if (selectedDrugs.includes('levothyroxine')) {
+                list.push({
+                    icon: 'fa-bell text-rose-500',
+                    title: 'Levothyroxine ต้องรับประทานตอนท้องว่างทันทีหลังตื่นนอน',
+                    desc: 'ก่อนอาหารเช้า 30-60 นาที ด้วยน้ำเปล่า 1 แก้วเต็ม และเว้นห่างจากนม กาแฟ ยาลดกรด หรือแคลเซียมอย่างน้อย 4 ชั่วโมง'
+                });
+            }
+
+            if (list.length === 0) {
+                list.push({
+                    icon: 'fa-circle-check text-emerald-500',
+                    title: 'จัดเวลารับประทานยาตามมื้ออาหารปกติอย่างสม่ำเสมอ',
+                    desc: 'ยาชุดที่เลือกไม่มีข้อจำกัดเรื่องเวลาทานร่วมกันที่ซับซ้อน แนะนำรับประทานตามคำสั่งแพทย์หรือฉลากยาอย่างต่อเนื่อง'
+                });
+            }
+
+            list.forEach(item => {
+                const row = document.createElement('div');
+                row.className = 'p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-start gap-2.5';
+                row.innerHTML = 
+                    '<i class="fa-solid ' + item.icon + ' text-base mt-0.5 flex-shrink-0"></i>' +
+                    '<div>' +
+                        '<strong class="text-slate-900 block font-heading mb-0.5">' + item.title + '</strong>' +
+                        '<p class="text-slate-600 leading-relaxed">' + item.desc + '</p>' +
+                    '</div>';
+                container.appendChild(row);
+            });
+        }
+
+        // --- 12. DIETARY ADVICE ---
+        function renderDietaryAdvice() {
+            const container = document.getElementById('dietary-alert-content');
+            container.innerHTML = '';
+
+            const warnings = [];
+            selectedDrugs.forEach(id => {
+                const drug = DRUG_DATABASE.find(d => d.id === id);
+                if (drug && drug.foodWarnings && drug.foodWarnings.length > 0) {
+                    drug.foodWarnings.forEach(w => {
+                        warnings.push({ drugName: drug.nameEn, text: w });
+                    });
+                }
+            });
+
+            if (warnings.length === 0) {
+                container.innerHTML = 
+                    '<div class="col-span-full p-3.5 bg-white rounded-xl border border-amber-200 text-amber-900 flex items-center gap-2">' +
+                        '<i class="fa-solid fa-circle-check text-emerald-600"></i>' +
+                        '<span>ไม่พบข้อห้ามเรื่องอาหารเฉพาะที่รุนแรงสำหรับยาชุดนี้ สามารถรับประทานอาหารได้ตามปกติ</span>' +
+                    '</div>';
+                return;
+            }
+
+            warnings.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'p-2.5 bg-white rounded-xl border border-amber-200/90 flex items-start gap-2 shadow-xs';
+                card.innerHTML = 
+                    '<i class="fa-solid fa-triangle-exclamation text-amber-500 mt-0.5 text-xs flex-shrink-0"></i>' +
+                    '<div>' +
+                        '<strong class="text-amber-950 font-bold font-heading">' + item.drugName + ':</strong> ' +
+                        '<span class="text-amber-900">' + item.text + '</span>' +
                     '</div>';
                 container.appendChild(card);
             });
         }
 
-        // 5. TIMING & DIETARY ADVICE
-        function renderTimingAdvice() {
-            const container = document.getElementById('timing-advice-content');
-            container.innerHTML = '';
-
-            const adviceList = [];
-
-            const hasChelators = selectedDrugs.some(id => ['antacids', 'calcium', 'iron'].includes(id));
-            const hasAntibiotics = selectedDrugs.some(id => ['ciprofloxacin', 'doxycycline'].includes(id));
-
-            if (hasChelators && hasAntibiotics) {
-                adviceList.push({
-                    icon: 'fa-hourglass-half text-amber-600',
-                    title: 'เว้นระยะห่างยาฆ่าเชื้อกับยาลดกรด/แร่ธาตุ 2-4 ชั่วโมง',
-                    desc: 'ยาลดกรด, แคลเซียม หรือธาตุเหล็กจะดักจับตัวยาฆ่าเชื้อ ทำให้ดูดซึมไม่ได้ ควรทานยาฆ่าเชื้อก่อนยาลดกรด 2 ชั่วโมง หรือหลังยาลดกรด 4 ชั่วโมง'
-                });
-            }
-
-            if (selectedDrugs.includes('aspirin') && selectedDrugs.includes('ibuprofen')) {
-                adviceList.push({
-                    icon: 'fa-clock text-rose-600',
-                    title: 'เว้นระยะ Aspirin ก่อน Ibuprofen อย่างน้อย 1 ชั่วโมง',
-                    desc: 'หากจำเป็นต้องรับประทาน ให้รับประทาน Aspirin ก่อน Ibuprofen 1 ชั่วโมง หรือทาน Ibuprofen ห่างออกไปอย่างน้อย 8 ชั่วโมง เพื่อให้ Aspirin ออกฤทธิ์ต้านเกล็ดเลือดได้เต็มที่'
-                });
-            }
-
-            if (selectedDrugs.includes('omeprazole')) {
-                adviceList.push({
-                    icon: 'fa-sun text-teal-600',
-                    title: 'Omeprazole ควรทานก่อนอาหารเช้า 30-60 นาที',
-                    desc: 'เพื่อให้ยาออกฤทธิ์ยับยั้งการหลั่งกรดในกระเพาะอาหารได้อย่างเต็มประสิทธิภาพตลอดทั้งวัน'
-                });
-            }
-
-            if (selectedDrugs.includes('simvastatin')) {
-                adviceList.push({
-                    icon: 'fa-moon text-indigo-600',
-                    title: 'Simvastatin แนะนำรับประทานเวลาก่อนนอน',
-                    desc: 'เนื่องจากตับจะสร้างคอเลสเตอรอลมากที่สุดในช่วงเวลากลางคืน ยาจึงออกฤทธิ์ได้ดีที่สุดเมื่อทานเวลาก่อนนอน'
-                });
-            }
-
-            if (selectedDrugs.includes('levothyroxine')) {
-                adviceList.push({
-                    icon: 'fa-bell text-rose-600',
-                    title: 'Levothyroxine ต้องทานตอนท้องว่างทันทีหลังตื่นนอน',
-                    desc: 'รับประทานก่อนอาหารเช้า 30-60 นาที ด้วยน้ำเปล่า 1 แก้วเต็ม และเว้นห่างจากนม แคลเซียม ธาตุเหล็ก หรือยาลดกรดอย่างน้อย 4 ชั่วโมง'
-                });
-            }
-
-            if (adviceList.length === 0) {
-                adviceList.push({
-                    icon: 'fa-calendar-check text-emerald-600',
-                    title: 'จัดเวลารับประทานยาตามมื้ออาหารอย่างสม่ำเสมอ',
-                    desc: 'ยาชุดที่เลือกไม่มีข้อจำกัดเรื่องเวลาทานร่วมกันที่ซับซ้อน แนะนำรับประทานตามคำสั่งแพทย์อย่างตรงเวลาและต่อเนื่อง'
-                });
-            }
-
-            adviceList.forEach(item => {
-                const el = document.createElement('div');
-                el.className = 'p-2.5 bg-slate-50 rounded-xl border border-slate-200 flex items-start gap-2.5';
-                el.innerHTML = 
-                    '<i class="fa-solid ' + item.icon + ' text-sm mt-0.5 flex-shrink-0"></i>' +
-                    '<div>' +
-                        '<strong class="text-slate-900 block font-bold mb-0.5 font-heading">' + item.title + '</strong>' +
-                        '<span class="text-slate-600 leading-relaxed">' + item.desc + '</span>' +
-                    '</div>';
-                container.appendChild(el);
-            });
-        }
-
-        function renderDietaryAdvice() {
-            const container = document.getElementById('dietary-alert-content');
-            container.innerHTML = '';
-
-            const collectedWarnings = [];
-
-            selectedDrugs.forEach(id => {
-                const drug = DRUG_DATABASE.find(d => d.id === id);
-                if (drug && drug.foodWarnings && drug.foodWarnings.length > 0) {
-                    drug.foodWarnings.forEach(warn => {
-                        collectedWarnings.push({
-                            drugName: drug.nameEn,
-                            text: warn
-                        });
-                    });
-                }
-            });
-
-            if (collectedWarnings.length === 0) {
-                container.innerHTML = 
-                    '<div class="col-span-2 p-3 bg-white/90 rounded-xl border border-amber-200 text-amber-900">' +
-                        '<i class="fa-solid fa-check text-emerald-600 mr-1.5"></i> ไม่พบข้อห้ามเรื่องอาหารที่รุนแรงเฉพาะสำหรับยาชุดนี้ รับประทานอาหารได้ตามปกติ' +
-                    '</div>';
-                return;
-            }
-
-            collectedWarnings.forEach(item => {
-                const el = document.createElement('div');
-                el.className = 'p-2.5 bg-white/90 rounded-xl border border-amber-200/80 flex items-start gap-2';
-                el.innerHTML = 
-                    '<i class="fa-solid fa-triangle-exclamation text-amber-500 mt-0.5 text-xs flex-shrink-0"></i>' +
-                    '<div>' +
-                        '<strong class="text-amber-950 font-bold font-heading">' + item.drugName + ':</strong>' +
-                        '<span class="text-amber-900 ml-1">' + item.text + '</span>' +
-                    '</div>';
-                container.appendChild(el);
-            });
-        }
-
-        // 6. MODALS & CATALOG CONTROLLERS
+        // --- 13. MODALS & CATALOG CONTROLLERS ---
         function openModal(id) {
-            const modal = document.getElementById(id);
-            if (modal) {
-                modal.classList.remove('hidden');
+            const m = document.getElementById(id);
+            if (m) {
+                m.classList.remove('hidden');
                 document.body.classList.add('overflow-hidden');
+                if (id === 'modal-catalog') {
+                    renderCatalogModalList(DRUG_DATABASE);
+                }
             }
         }
 
         function closeModal(id) {
-            const modal = document.getElementById(id);
-            if (modal) {
-                modal.classList.add('hidden');
+            const m = document.getElementById(id);
+            if (m) {
+                m.classList.add('hidden');
                 document.body.classList.remove('overflow-hidden');
+                if (id === 'modal-disclaimer') {
+                    localStorage.setItem('dosematch_disclaimer_accepted', 'true');
+                }
             }
         }
 
-        function initCatalogModal() {
-            renderCatalogList(DRUG_DATABASE);
-        }
-
-        function renderCatalogList(drugs) {
-            const container = document.getElementById('catalog-list');
+        function renderCatalogModalList(drugs) {
+            const container = document.getElementById('modal-catalog-list');
             if (!container) return;
             container.innerHTML = '';
 
@@ -2657,38 +2525,41 @@
                 const el = document.createElement('div');
                 el.className = 'py-2 px-2 flex items-center justify-between gap-3 hover:bg-slate-50 rounded-lg transition-colors';
                 el.innerHTML = 
-                    '<div class="flex items-center gap-2.5">' +
-                        '<span class="w-6 h-6 rounded-md bg-slate-100 text-slate-500 flex items-center justify-center text-[10px]">' +
+                    '<div class="flex items-center gap-2.5 min-w-0">' +
+                        '<span class="w-6 h-6 rounded-md bg-slate-100 text-slate-500 flex items-center justify-center text-[10px] flex-shrink-0">' +
                             '<i class="fa-solid fa-capsules"></i>' +
                         '</span>' +
-                        '<div>' +
-                            '<div class="flex items-center gap-1.5">' +
-                                '<strong class="text-slate-900 text-xs">' + drug.nameEn + '</strong>' +
-                                '<span class="text-slate-500 text-[11px]">(' + drug.nameTh + ')</span>' +
+                        '<div class="truncate">' +
+                            '<div class="flex items-center gap-1.5 truncate">' +
+                                '<strong class="text-slate-900 text-xs truncate">' + drug.nameEn + '</strong>' +
+                                '<span class="text-slate-500 text-[11px] truncate">(' + drug.nameTh + ')</span>' +
                             '</div>' +
                             '<span class="text-[10px] text-teal-700 font-medium">' + (drug.categoryTh || drug.category) + '</span>' +
                         '</div>' +
                     '</div>' +
-                    '<button data-id="' + drug.id + '" onclick="toggleCatalogDrug(this.dataset.id)" class="px-2.5 py-1 rounded-md text-xs font-medium transition-colors ' + (isSelected ? 'bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200' : 'bg-teal-50 text-teal-700 hover:bg-teal-100 border border-teal-200') + '">' +
+                    '<button data-id="' + drug.id + '" onclick="toggleCatalogDrug(this.dataset.id)" ' +
+                        'class="px-2.5 py-1 rounded-md text-xs font-medium transition-colors flex-shrink-0 ' + 
+                        (isSelected ? 'bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200' : 'bg-teal-50 text-teal-700 hover:bg-teal-100 border border-teal-200') + '">' +
                         (isSelected ? '<i class="fa-solid fa-minus mr-1"></i> ลบออก' : '<i class="fa-solid fa-plus mr-1"></i> เพิ่ม') +
                     '</button>';
                 container.appendChild(el);
             });
         }
 
-        function filterCatalog(query) {
-            const filtered = searchDrugs(query, 'all');
-            renderCatalogList(filtered);
+        function filterCatalogModal(val) {
+            const q = val.trim().toLowerCase();
+            const filtered = DRUG_DATABASE.filter(d => 
+                d.nameEn.toLowerCase().includes(q) || 
+                d.nameTh.toLowerCase().includes(q) ||
+                (d.aliases && d.aliases.some(a => a.toLowerCase().includes(q)))
+            );
+            renderCatalogModalList(filtered);
         }
 
         function toggleCatalogDrug(id) {
-            if (selectedDrugs.includes(id)) {
-                removeDrug(id);
-            } else {
-                addDrug(id);
-            }
+            toggleDrugSelection(id);
             const searchVal = document.getElementById('modal-catalog-search').value;
-            filterCatalog(searchVal);
+            filterCatalogModal(searchVal);
         }
     </script>
 </body>
