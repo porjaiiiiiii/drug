@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="100%" height="100%">
+  <defs>
+    <!-- Gradients matching the user's logo -->
+    <linearGradient id="blueCapsule" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e4b8a"/>
+      <stop offset="50%" stop-color="#0f2e60"/>
+      <stop offset="100%" stop-color="#0a1f42"/>
+    </linearGradient>
+    <linearGradient id="greenCapsule" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#22c58b"/>
+      <stop offset="50%" stop-color="#00a877"/>
+      <stop offset="100%" stop-color="#007f59"/>
+    </linearGradient>
+    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#00b488"/>
+      <stop offset="100%" stop-color="#008a62"/>
+    </linearGradient>
+    <filter id="softGlow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#0a1f42" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+
+  <g transform="translate(0, -10)">
+    <!-- Top Sparkles (3 rays at top right) -->
+    <g fill="#00a877">
+      <ellipse cx="380" cy="95" rx="8" ry="18" transform="rotate(35 380 95)"/>
+      <ellipse cx="405" cy="130" rx="7" ry="16" transform="rotate(65 405 130)"/>
+      <ellipse cx="410" cy="170" rx="6" ry="15" transform="rotate(85 410 170)"/>
+    </g>
+
+    <!-- Capsule Pair forming Heart / Interlocking Pills -->
+    <!-- Left Pill (Deep Blue) rotated ~ -38 deg -->
+    <g transform="translate(205, 175) rotate(-38)">
+      <!-- Outer capsule pill -->
+      <rect x="-42" y="-100" width="84" height="200" rx="42" fill="url(#blueCapsule)" stroke="#0c254e" stroke-width="6"/>
+      <!-- Pill divider line -->
+      <line x1="-40" y1="0" x2="40" y2="0" stroke="#3b82f6" stroke-width="4" stroke-opacity="0.6"/>
+      <!-- Inner capsule reflection / shine -->
+      <path d="M -22 -75 Q -22 -20 -20 20" stroke="#ffffff" stroke-width="7" stroke-linecap="round" stroke-opacity="0.35" fill="none"/>
+    </g>
+
+    <!-- Right Pill (Vibrant Emerald Green) rotated ~ 38 deg -->
+    <g transform="translate(295, 175) rotate(38)">
+      <!-- Outer capsule pill -->
+      <rect x="-42" y="-100" width="84" height="200" rx="42" fill="url(#greenCapsule)" stroke="#006b4b" stroke-width="6"/>
+      <!-- Pill divider line -->
+      <line x1="-40" y1="0" x2="40" y2="0" stroke="#a7f3d0" stroke-width="4" stroke-opacity="0.6"/>
+      <!-- Inner capsule reflection / shine -->
+      <path d="M 22 -75 Q 22 -20 20 20" stroke="#ffffff" stroke-width="7" stroke-linecap="round" stroke-opacity="0.4" fill="none"/>
+    </g>
+
+    <!-- Center Protective Shield (Medical Safety) -->
+    <g transform="translate(250, 205)">
+      <!-- Shield background -->
+      <path d="M 0 -36 C 24 -36 34 -42 34 -42 C 34 8 22 42 0 54 C -22 42 -34 8 -34 -42 C -34 -42 -24 -36 0 -36 Z" 
+            fill="url(#shieldGrad)" stroke="#ffffff" stroke-width="5" filter="url(#softGlow)"/>
+      <!-- Medical Cross / Plus in shield -->
+      <path d="M -7 -14 H 7 V -4 H 17 V 6 H 7 V 16 H -7 V 6 H -17 V -4 H -7 Z" fill="#ffffff"/>
+    </g>
+  </g>
+
+  <!-- Typography matching exact user design -->
+  <!-- "Dose" in Deep Blue -->
+  <text x="250" y="365" 
+        text-anchor="middle" 
+        font-family="'Prompt', 'Plus Jakarta Sans', 'Arial Rounded MT Bold', sans-serif" 
+        font-weight="800" 
+        font-size="94" 
+        fill="#0f2b5c" 
+        letter-spacing="-1">Dose</text>
+
+  <!-- "Match" in Vibrant Green -->
+  <text x="250" y="455" 
+        text-anchor="middle" 
+        font-family="'Prompt', 'Plus Jakarta Sans', 'Arial Rounded MT Bold', sans-serif" 
+        font-weight="800" 
+        font-size="98" 
+        fill="#00a877" 
+        letter-spacing="-1">Match</text>
+</svg>
